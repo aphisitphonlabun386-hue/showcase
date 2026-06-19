@@ -24,7 +24,7 @@
         
         .infographic-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem; }
         
-        .story-node { background: var(--bg-secondary); padding: 2.5rem; border: 1px solid var(--border); border-radius: 20px; transition: transform 0.3s ease; }
+        .story-node { background: var(--bg-secondary); padding: 2.5rem; border: 1px solid var(--border); border-radius: 20px; transition: transform 0.3s ease; cursor: pointer; }
         .story-node:hover { transform: translateY(-10px); border-color: var(--accent); }
         
         .ticker { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; font-family: 'Outfit', sans-serif; }
@@ -34,21 +34,33 @@
         
         .snapshot-text { color: var(--text-secondary); line-height: 1.7; font-size: 1.1rem; }
         .data-point { display: flex; justify-content: space-between; margin-top: 1.5rem; font-size: 0.95rem; color: var(--accent); font-weight: 600; }
+        
+        /* Modal System (reused) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-secondary); width: 90%; max-width: 900px; max-height: 80vh; border-radius: 20px; padding: 2rem; overflow-y: auto; color: var(--cream); }
     </style>
 </head>
 <body>
     <h1>Market Data Stories</h1>
     <div id="canvas" class="infographic-canvas"></div>
 
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+        <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+    </div>
+
     <script>
+        let currentData = [];
         fetch('data/stocks.json')
             .then(res => res.json())
             .then(data => {
+                currentData = data;
                 const canvas = document.getElementById('canvas');
-                data.forEach(stock => {
+                data.forEach((stock, idx) => {
                     if (!stock.snapshot) return;
                     const node = document.createElement('div');
                     node.className = 'story-node';
+                    node.onclick = () => openModal(idx);
                     node.innerHTML = `
                         <div class="ticker">${stock.ticker}</div>
                         <p class="snapshot-text">${stock.snapshot.substring(0, 120)}...</p>
@@ -58,6 +70,28 @@
                     canvas.appendChild(node);
                 });
             });
+
+        function openModal(idx) {
+            const stock = currentData[idx];
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <h2 style="color:var(--accent); margin-bottom:1rem;">${stock.ticker} - Detailed Insights</h2>
+                <div style="line-height:1.8;">
+                    ${stock.snapshot}
+                    <h3 style="margin-top:1.5rem; color:var(--accent);">Latest Earnings</h3>
+                    <ul>${stock.latest_earnings.map(e => `<li>${e}</li>`).join('')}</ul>
+                    <h3 style="margin-top:1.5rem; color:var(--accent);">Outlook</h3>
+                    <p><strong>Bull:</strong> ${stock.bull_case}</p>
+                    <p><strong>Bear:</strong> ${stock.bear_case}</p>
+                </div>
+                <button onclick="closeModal()" style="margin-top:2rem; padding:0.5rem 1rem; cursor:pointer;">Close</button>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
     </script>
 </body>
 </html>
