@@ -3,106 +3,751 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partner Risk Showcase - ClaudyOS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Stock Brief Showcase - ClaudyOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #1a1917;
-            --bg-secondary: #262421;
-            --cream: #f4eade;
-            --accent: #d4a373;
-            --text-primary: #f4eade;
-            --text-secondary: #d6ccc2;
-            --border: #403d39;
-            --bar-start: #d4a373;
-            --bar-end: #a17c5b;
+            --bg-primary: #0b0f19;
+            --bg-secondary: #161b26;
+            --bg-tertiary: #1f2636;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #2e3748;
+            --success: #10b981;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --font-display: 'Outfit', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; padding: 3rem; margin: 0; }
-        h1 { font-family: 'Outfit', sans-serif; font-size: 3.5rem; text-align: center; margin-bottom: 3rem; color: var(--cream); letter-spacing: -1px; }
-        
-        .infographic-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem; }
-        
-        .story-node { background: var(--bg-secondary); padding: 2.5rem; border: 1px solid var(--border); border-radius: 20px; transition: transform 0.3s ease; cursor: pointer; }
-        .story-node:hover { transform: translateY(-10px); border-color: var(--accent); }
-        
-        .ticker { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; font-family: 'Outfit', sans-serif; }
-        
-        .bar-container { height: 12px; background: #333; border-radius: 6px; margin: 20px 0; overflow: hidden; }
-        .bar { height: 100%; background: linear-gradient(90deg, var(--bar-start), var(--bar-end)); width: 0%; transition: width 1.5s ease-out; }
-        
-        .snapshot-text { color: var(--text-secondary); line-height: 1.7; font-size: 1.1rem; }
-        .data-point { display: flex; justify-content: space-between; margin-top: 1.5rem; font-size: 0.95rem; color: var(--accent); font-weight: 600; }
-        
-        /* Modal System (reused) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; justify-content: center; align-items: center; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: var(--bg-secondary); width: 90%; max-width: 900px; max-height: 80vh; border-radius: 20px; padding: 2rem; overflow-y: auto; color: var(--cream); }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 80px 0 40px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .subtitle { color: var(--text-secondary); font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
+
+        .controls {
+            margin: 40px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 16px 20px 16px 50px;
+            border-radius: 14px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .stats { color: var(--text-secondary); background: var(--bg-secondary); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); }
+
+        .brief-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .card-ticker { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff; }
+        .card-status { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); color: var(--success); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .card-preview { color: var(--text-secondary); margin-bottom: 24px; font-weight: 300; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .card-footer { margin-top: auto; display: flex; align-items: center; color: var(--accent); font-weight: 600; gap: 8px; transition: all 0.2s; }
+        .card:hover .card-footer { gap: 14px; }
+
+        /* Modal System */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 8, 15, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            background: var(--bg-secondary);
+            width: 95%;
+            max-width: 1000px;
+            height: 90vh;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal-header { padding: 30px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { display: flex; align-items: center; gap: 20px; }
+        .modal-ticker { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: #fff; }
+        .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.2s; }
+        .modal-close:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+        .modal-body { padding: 0; display: flex; flex: 1; overflow: hidden; }
+
+        /* Left Sidebar in Modal */
+        .modal-nav { width: 250px; border-right: 1px solid var(--border); padding: 30px 20px; background: rgba(255,255,255,0.01); }
+        .nav-item { padding: 12px 16px; border-radius: 10px; color: var(--text-secondary); cursor: pointer; margin-bottom: 8px; font-weight: 500; transition: 0.2s; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
+        .nav-item.active { background: var(--accent); color: #fff; }
+
+        /* Right Content in Modal */
+        .modal-content { flex: 1; padding: 40px; overflow-y: auto; scrollbar-width: thin; }
+
+        .section-header { font-family: var(--font-display); color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+        .section-header::before { content: ''; width: 4px; height: 24px; background: var(--accent); border-radius: 2px; }
+
+        .brief-list { list-style: none; margin-bottom: 24px; }
+        .brief-list li { position: relative; padding-left: 28px; margin-bottom: 16px; color: var(--text-secondary); }
+        .brief-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+
+        .source-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+
+        .source-tag.clickable { cursor: pointer; color: var(--accent); border-color: rgba(99,102,241,0.3); }
+        .source-tag.clickable:hover { background: rgba(99,102,241,0.1); }
+
+        /* Source Viewer Modal */
+        #sourceViewer {
+            position: fixed;
+            top: 50px; right: 50px; bottom: 50px; left: 50px;
+            background: #05070a;
+            z-index: 2000;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            display: none;
+            flex-direction: column;
+        }
+        #sourceViewer.active { display: flex; }
+        .viewer-header { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .viewer-body { flex: 1; padding: 30px; overflow: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; white-space: pre-wrap; color: #a5b4fc; }
+
+        p { margin-bottom: 16px; color: var(--text-secondary); font-weight: 300; }
+        strong { color: #fff; font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .modal-body { flex-direction: column; }
+            .modal-nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; padding: 15px; }
+            .nav-item { margin-bottom: 0; margin-right: 10px; white-space: nowrap; }
+        }
     </style>
 </head>
 <body>
-    <h1>Market Data Stories</h1>
-    <div id="canvas" class="infographic-canvas"></div>
+
+    <header>
+        <div class="container">
+            <h1>Stock Briefs</h1>
+            <p class="subtitle">Source-grounded research briefs generated with the LTD AI 101 sub-agent workflow</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="controls">
+            <div class="search-bar">
+                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="searchInput" placeholder="Search by ticker or brief title..." oninput="handleSearch()">
+            </div>
+            <div class="stats" id="statsDisplay">Loading briefs...</div>
+        </div>
+
+        <div class="brief-grid" id="briefGrid"></div>
+    </main>
 
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-        <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="modal-ticker" id="modalTicker">AAPL</span>
+                    <span class="card-status">Research Brief</span>
+                </div>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-nav" id="modalNav"></div>
+                <div class="modal-content" id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sourceViewer">
+        <div class="viewer-header">
+            <span id="viewerPath" style="font-family: monospace; color: var(--accent);"></span>
+            <button class="modal-close" onclick="closeSource()">
+                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="viewer-body" id="viewerContent"></div>
     </div>
 
     <script>
-        let currentData = [];
-        fetch('data/stocks.json')
-            .then(res => res.json())
-            .then(data => {
-                currentData = data;
-                const canvas = document.getElementById('canvas');
-                data.forEach((stock, idx) => {
-                    const node = document.createElement('div');
-                    node.className = 'story-node';
-                    node.onclick = () => openModal(idx);
-                    node.innerHTML = `
-                        <div class="ticker">${stock.ticker}</div>
-                        <p class="snapshot-text">${stock.snapshot ? stock.snapshot.substring(0, 120) + '...' : 'No snapshot available.'}</p>
-                        <div class="bar-container"><div class="bar" style="width: ${Math.random() * 50 + 50}%"></div></div>
-                        <div class="data-point"><span>Market Sentiment</span><span>Bullish</span></div>
-                    `;
-                    canvas.appendChild(node);
-                });
-            });
+        const briefsData = [
+  {
+    "ticker": "AAPL",
+    "title": "AAPL Research Brief",
+    "summary": "Apple (AAPL) เป็นผู้ให้บริการโซลูชันแบบครบวงจรที่รวมฮาร์ดแวร์ (iPhone, Mac, iPad, Wearables), ระบบปฏิบัติการ (iOS, macOS), และบริการ (Services) เข้...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>Apple (AAPL) เป็นผู้ให้บริการโซลูชันแบบครบวงจรที่รวมฮาร์ดแวร์ (iPhone, Mac, iPad, Wearables), ระบบปฏิบัติการ (iOS, macOS), และบริการ (Services) เข้าด้วยกันอย่างเหนียวแน่น รายได้หลักยังคงมาจาก iPhone (51.4% ของรายได้ปี 2024) แต่กลุ่ม Services (24.6%) เป็นตัวขับเคลื่อนการเติบโตหลักและความได้เปรียบในเชิง <strong>Switching Costs</strong> ที่สูงมากจากการผูกโยงข้อมูลและประสบการณ์ของผู้ใช้ไว้ใน Ecosystem เดียวกัน <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Revenue trend:</strong> รายได้รวมในปี 2024 เติบโตเล็กน้อย 2% โดยที่กลุ่ม Services เติบโตโดดเด่นถึง 13% ชดเชยรายได้จาก iPhone ที่ค่อนข้างคงที่ และกลุ่ม iPad/Wearables ที่มียอดขายลดลง <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n<li><strong>Margin trend:</strong> Gross Margin มีทิศทางดีขึ้นทั้งในฝั่ง Products (จากการประหยัดต้นทุน) และฝั่ง Services (จากการเติบโตของรายได้และการเปลี่ยนแปลงของส่วนผสมรายได้) <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n<li><strong>Balance sheet feel:</strong> แข็งแกร่งอย่างยิ่ง ล่าสุดในไตรมาส 2 ปี 2026 มีการอนุมัติวงเงินซื้อหุ้นคืนเพิ่มอีก 100 พันล้านดอลลาร์ และเพิ่มเงินปันผล 4% <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n<li><strong>Capital allocation pattern:</strong> เน้นการคืนกระแสเงินสดให้ผู้ถือหุ้นผ่านการซื้อหุ้นคืนและปันผลอย่างสม่ำเสมอ โดยมุ่งเน้นการลงทุนในนวัตกรรมและเทคโนโลยีใหม่ๆ เช่น AI เพื่อรักษาตำแหน่งทางการแข่งขัน <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings",
+        "html": "<ul class=\"brief-list\">\n<li>รายได้รวมในไตรมาสเดือนมีนาคม (Q2 2026) ทำสถิติสูงสุดใหม่ที่ 111.2 พันล้านดอลลาร์ เพิ่มขึ้น 17% เมื่อเทียบกับปีที่ผ่านมา <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n<li>รายได้จาก iPhone สร้างสถิติใหม่สำหรับไตรมาสมีนาคมที่ 57 พันล้านดอลลาร์ เพิ่มขึ้น 22% จากความต้องการ iPhone 17 <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n<li>ธุรกิจบริการ (Services) ทำรายได้สูงสุดเป็นประวัติการณ์ที่ 31 พันล้านดอลลาร์ หรือเพิ่มขึ้น 16% <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n<li>อัตรากำไรขั้นต้น (Gross Margin) รายงานอยู่ที่ 49.27% ในไตรมาสล่าสุด <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n<li>ประกาศแผนสืบทอดตำแหน่ง CEO โดย John Ternus จะขึ้นดำรงตำแหน่งแทน Tim Cook ในวันที่ 1 กันยายน 2026 <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/transcript.md')\">sources/AAPL/transcript.md</span></li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> รอบการอัปเกรด AI iPhone (Apple Intelligence) ที่คาดว่าจะมาพร้อมกับ iOS 18 และดีลร่วมกับ OpenAI เพื่อนำ ChatGPT มาอัปเกรด Siri รวมถึงการฟื้นตัวอย่างรุนแรงของยอดขาย iPhone ในจีนที่พุ่งสูงถึง 52% ในเดือนเมษายน 2024 <span class=\"source-tag\">Yi Market Intel</span></li>\n<li><strong>Bear case:</strong> ความเสี่ยงด้านกฎหมายผูกขาด (Antitrust) จากกระทรวงยุติธรรมสหรัฐฯ และ EU ที่อาจบีบให้ต้องเปลี่ยนโมเดลธุรกิจ และความกังวลเรื่องรอบการเปลี่ยนเครื่องหากฟีเจอร์ AI ไม่น่าดึงดูดพอสำหรับผู้ใช้ iPhone รุ่นเก่ากว่า 1.3 พันล้านเครื่องที่ไม่รองรับ AI ขั้นสูง <span class=\"source-tag\">Yi & Shen Analysis</span></li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>ผลประกอบการภาคบริการ (Services) ลดลงอย่างต่อเนื่องจากการเปลี่ยนแปลงกฎระเบียบที่บีบให้ต้องเปิดระบบหรือลดค่าธรรมเนียม App Store <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n<li>ความล้มเหลวในการพัฒนานวัตกรรม AI ที่น่าประทับใจในงาน WWDC จนทำให้เสียตำแหน่งทางการแข่งขัน <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n<li>ปัญหาด้านห่วงโซ่อุปทานขั้นรุนแรงจากการพึ่งพาผู้ผลิตจำกัดรายสำหรับส่วนประกอบสำคัญ <span class=\"source-tag clickable\" onclick=\"viewSource('sources/AAPL/10-k-fy2024.md')\">sources/AAPL/10-k-fy2024.md</span></li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเชื่อว่าฟีเจอร์ \"Apple Intelligence\" จะเป็นเหตุผลหลักที่บังคับให้ผู้ใช้ iPhone 1.3 พันล้านเครื่องต้องอัปเกรดเครื่องใหม่ได้จริงหรือไม่?</li>\n<li>การเปลี่ยนตัว CEO เป็น John Ternus จะส่งผลต่อทิศทางนวัตกรรมและการบริหารจัดการเงินทุนของ Apple อย่างไรในระยะยาว?</li>\n<li>Apple จะสามารถรักษาความเป็นส่วนตัว (Privacy) ไปพร้อมกับการใช้ AI ที่ต้องเข้าถึงข้อมูลเชิงลึกของผู้ใช้ได้หรือไม่?</li>\n<li>ราคาหุ้นที่ระดับปัจจุบันได้สะท้อนความคาดหวังเรื่อง AI Supercycle ไปหมดแล้วหรือยัง?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-10 23:56"
+  },
+  {
+    "ticker": "ACME_CORP",
+    "title": "Risk Assessment Brief: ACME CORP",
+    "summary": "\nCurrent Ratio: 1.",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Financial Liquidity & Solvency",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Current Ratio:</strong> 1.25x. Liquidity is tight, indicating potential difficulty meeting short-term obligations (sources/ACME_CORP/financials.md).</li>\n<li><strong>Solvency Risk:</strong> Debt-to-Equity ratio is 2.5, representing very high leverage and financial instability (sources/ACME_CORP/financials.md).</li>\n<li><strong>Cash Runway:</strong> Estimated at only 4 months with a monthly burn rate of $500,000 (sources/ACME_CORP/financials.md).</li>\n<li><strong>Operational Performance:</strong> Reported a Net Loss of $1.5M for FY2025, with gross margins declining from 22% to 15% (sources/ACME_CORP/financials.md).</li>\n</ul>"
+      },
+      {
+        "id": "2",
+        "title": "Compliance & Legal Status",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Entity Status:</strong> Active registration in Delaware (sources/ACME_CORP/registration.md).</li>\n<li><strong>Regulatory Risk:</strong> Environmental Operations Clearance is currently \"Under Review\" with a temporary permit expiring in Sept 2026 (sources/ACME_CORP/registration.md).</li>\n<li><strong>Litigation:</strong> Facing a $850,000 lawsuit from Beta Logistics for breach of contract and unpaid fees (sources/ACME_CORP/registration.md).</li>\n<li><strong>Tax Compliance:</strong> Currently under IRS audit for a $150,000 mismatch in R&D tax credits (sources/ACME_CORP/registration.md).</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Market Reputation & Operational Reliability",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Supplier Relations:</strong> Accounts Payable aging has stretched to 62 days, confirming delays in payments to partners (sources/ACME_CORP/financials.md).</li>\n<li><strong>Legal Disputes:</strong> Active patent infringement dispute with Prime Inc. regarding core technology components (sources/ACME_CORP/registration.md).</li>\n</ul>"
+      },
+      {
+        "id": "misc",
+        "title": "Summary Recommendation",
+        "html": "<p><strong>ACME CORP presents a High Risk profile.</strong> The combination of a critical cash runway (4 months), high debt levels, and active lawsuits from suppliers suggests significant operational and financial distress. Partnership should be approached with extreme caution, requiring upfront payments or strict escrow arrangements.</p>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-18 00:53"
+  },
+  {
+    "ticker": "EOSE",
+    "title": "EOSE Research Brief",
+    "summary": "Eos Energy Enterprises (EOSE) เป็นผู้ผลิตระบบกักเก็บพลังงานด้วยแบตเตอรี่ (BESS) ขนาดใหญ่สำหรับโรงไฟฟ้าและโครงข่ายไฟฟ้า โดยใช้เทคโนโลยีซิงค์ (Zinc-b...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>Eos Energy Enterprises (EOSE) เป็นผู้ผลิตระบบกักเก็บพลังงานด้วยแบตเตอรี่ (BESS) ขนาดใหญ่สำหรับโรงไฟฟ้าและโครงข่ายไฟฟ้า โดยใช้เทคโนโลยีซิงค์ (Zinc-based) ที่เป็นกรรมสิทธิ์ของตนเอง จุดเด่นคือความปลอดภัยสูง ไม่ติดไฟ และใช้วัสดุที่หาได้ง่ายในท้องถิ่น (สหรัฐฯ) มุ่งเป้าไปที่การกักเก็บพลังงานระยะยาว (Long-duration energy storage) เพื่อรองรับการเปลี่ยนผ่านไปสู่พลังงานหมุนเวียน</p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Revenue trend:</strong> มีแนวโน้มเติบโตแบบก้าวกระโดดตามการขยายกำลังการผลิตและคำสั่งซื้อที่เพิ่มขึ้น (Backlog)</li>\n<li><strong>Margin trend:</strong> ปัจจุบัน Gross Margin ยังคงติดลบ แต่บริษัทมีเป้าหมายที่จะทำให้เป็นบวกได้ภายในปี 2026 ผ่านการปรับปรุงกระบวนการผลิต (Project Spruce) และการประหยัดต่อขนาด (Scale)</li>\n<li><strong>Balance sheet feel:</strong> มีความเสี่ยงด้านสภาพคล่องสูงเนื่องจากยังขาดทุนจากการดำเนินงาน แต่มีการระดมทุนและจัดตั้ง JV เพื่อช่วยสนับสนุนด้านการเงิน</li>\n<li><strong>Capital allocation pattern:</strong> เน้นการลงทุนในสินทรัพย์ถาวร (CAPEX) เพื่อขยายโรงงานและการวิจัยพัฒนาเทคโนโลยี Zinc รุ่นใหม่ (Z3)</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings",
+        "html": "<ul class=\"brief-list\">\n<li>ไม่พบ Source ข้อมูลดิบ (ไม่พบไฟล์ใน sources/EOSE/)</li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> ได้รับประโยชน์สูงสุดจากกฎหมาย IRA (Inflation Reduction Act) เนื่องจากใช้วัสดุและผลิตในสหรัฐฯ, เทคโนโลยีมีความปลอดภัยสูงกว่า Lithium-ion สำหรับงานติดตั้งขนาดใหญ่</li>\n<li><strong>Bear case:</strong> ความล่าช้าในการขยายกำลังการผลิตอาจทำให้สูญเสียโอกาสทางการตลาด, ความเสี่ยงจากการเพิ่มทุน (Dilution) หากรายได้ไม่เติบโตทันรายจ่าย</li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>อัตรากำไรขั้นต้น (Gross Margin) ไม่สามารถกลับมาเป็นบวกได้ตามเป้าหมายในปี 2026</li>\n<li>ยอด Backlog หรือ Pipeline เริ่มลดลงอย่างต่อเนื่อง แสดงถึงการสูญเสียความสามารถในการแข่งขัน</li>\n<li>ปัญหาด้านเทคนิคในแบตเตอรี่รุ่น Z3 ที่ติดตั้งไปแล้ว ทำให้ต้องเสียค่าใช้จ่ายในการซ่อมแซมหรือเคลมสินค้ามหาศาล</li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเชื่อมั่นในเทคโนโลยี Zinc มากกว่า Lithium-ion สำหรับการกักเก็บพลังงานระยะยาวจริงหรือ?</li>\n<li>สภาพคล่องของบริษัทเพียงพอที่จะอยู่รอดจนถึงวันที่กระแสเงินสดเป็นบวกหรือไม่?</li>\n<li>สิทธิประโยชน์จากภาษี (Tax credits) คือปัจจัยเดียวที่ทำให้บริษัทนี้ดูน่าสนใจหรือไม่?</li>\n<li>ทีมบริหารมีความเชี่ยวชาญในการบริหารจัดการโรงงานผลิตขนาดใหญ่ (Manufacturing execution) เพียงพอหรือไม่?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-09 15:33"
+  },
+  {
+    "ticker": "MSFT",
+    "title": "Microsoft Corporation (MSFT) Research Brief",
+    "summary": "Microsoft (MSFT) เป็นผู้ให้บริการเทคโนโลยีระดับโลกที่ครอบคลุมทั้งซอฟต์แวร์ ฮาร์ดแวร์ และบริการคลาวด์ ปัจจุบันบริษัทได้ทรานส์ฟอร์มตัวเองสู่การเป็น \"...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>Microsoft (MSFT) เป็นผู้ให้บริการเทคโนโลยีระดับโลกที่ครอบคลุมทั้งซอฟต์แวร์ ฮาร์ดแวร์ และบริการคลาวด์ ปัจจุบันบริษัทได้ทรานส์ฟอร์มตัวเองสู่การเป็น \"AI-first company\" โดยมีรายได้หลักจาก 3 กลุ่ม ได้แก่ <strong>Intelligent Cloud</strong> (Azure), <strong>Productivity and Business Processes</strong> (Office 365, LinkedIn) และ <strong>More Personal Computing</strong> (Windows, Gaming, Search) ด้วยการผนวกโมเดล AI ของ OpenAI เข้ากับทุกผลิตภัณฑ์ ทำให้ Microsoft มีความได้เปรียบเชิงนิเวศน์ (Ecosystem) ที่แข็งแกร่งที่สุดรายหนึ่งในโลก</p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Revenue trend:</strong> เติบโตอย่างแข็งแกร่ง (FY2025 รายได้ $281.7B, +15% YoY) ขับเคลื่อนโดย Azure ที่เติบโตกว่า 34% และการรับรู้รายได้จาก Activision Blizzard</li>\n<li><strong>Margin trend:</strong> Gross Margin ยังอยู่ในระดับสูง (ประมาณ 69% สำหรับกลุ่ม Cloud) แต่เริ่มเผชิญความกดดันจากค่าใช้จ่ายด้านโครงสร้างพื้นฐาน AI (CapEx) ที่พุ่งสูงขึ้น</li>\n<li><strong>Balance sheet feel:</strong> แข็งแกร่งอย่างยิ่ง มีกระแสเงินสดอิสระมหาศาล และมีแผนซื้อหุ้นคืนมูลค่า $60B (อนุมัติ ก.ย. 2024)</li>\n<li><strong>Capital allocation pattern:</strong> เน้นการลงทุนหนักใน AI Data Centers ควบคู่ไปกับการคืนเงินปันผลและซื้อหุ้นคืน <span class=\"source-tag clickable\" onclick=\"viewSource('sources/MSFT/10-k-summary.md')\">sources/MSFT/10-k-summary.md</span></li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings (Q2 FY2026 - Jan 2026)",
+        "html": "<ul class=\"brief-list\">\n<li>รายได้รวม $81.3B (+17% YoY) สูงกว่าคาดการณ์</li>\n<li><strong>Cloud Milestone:</strong> รายได้จาก Microsoft Cloud ทะลุ $50B ต่อไตรมาสเป็นครั้งแรก</li>\n<li><strong>AI Traction:</strong> Microsoft 365 Copilot มียอดผู้ใช้แบบจ่ายเงินทะลุ 15 ล้านราย (เติบโต 160% ในไตรมาสเดียว)</li>\n<li><strong>OpenAI Impact:</strong> มีกำไรทางบัญชีจากการตีมูลค่าการลงทุนใน OpenAI เพิ่มขึ้น $7.6B <span class=\"source-tag clickable\" onclick=\"viewSource('sources/MSFT/earnings-summary.md')\">sources/MSFT/earnings-summary.md</span></li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Market Context & Sentiment (As of June 15, 2026)",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Latest News:</strong> ตลาดจับตาการปรับกลยุทธ์สู่ \"Agent-native\" architecture และการเปิดตัว Surface RTX Spark สำหรับรัน AI Model ขนาดใหญ่ในเครื่อง</li>\n<li><strong>Analyst Sentiment:</strong> ส่วนใหญ่แนะนำ \"Strong Buy\" มองว่าการปรับฐานของราคาหุ้นในเดือน มิ.ย. เป็นโอกาสเข้าซื้อที่ดี เนื่องจาก AI business มี Run rate รายได้แตะ $37B แล้ว (+123% YoY)</li>\n<li><strong>Risks:</strong> ความกังวลเรื่องการเติบโตของ Azure ที่อาจชะลอตัวลงเล็กน้อย และคดีฟ้องร้องจากผู้ถือหุ้นเกี่ยวกับการเปิดเผยข้อมูลการเติบโตของ AI <span class=\"source-tag\">Yi Market Intel</span></li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> การเปลี่ยนผ่านจาก \"AI Features\" สู่ \"Autonomous Agents\" จะสร้างรอบการเติบโตระลอกใหม่ และความสามารถในการรักษาความเป็นผู้นำในตลาด Cloud AI</li>\n<li><strong>Bear case:</strong> การแข่งขันที่รุนแรงจาก AWS และ Google Cloud รวมถึงความกดดันต่ออัตรากำไร (Margin) หากการลงทุน CapEx มหาศาลไม่สามารถสร้าง ROI ได้ตามเป้าในระยะยาว</li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>อัตราการเติบโตของ Azure ลดลงต่ำกว่า 25% ต่อเนื่อง 2 ไตรมาส</li>\n<li>ปัญหาด้านความปลอดภัยทางไซเบอร์ (Security Breach) รุนแรงในระบบ Azure หรือ Teams จนเสียความเชื่อมั่นจากลูกค้าองค์กร</li>\n<li>กฎระเบียบ Antitrust ที่เข้มงวดขึ้นจนบีบให้ต้องแยกธุรกิจหรือจำกัดการควบรวมกิจการในอนาคต</li>\n</ul>"
+      },
+      {
+        "id": "7",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเชื่อว่า Microsoft จะยังรักษาตำแหน่ง \"AI Leader\" ได้หรือไม่หากคู่แข่งสามารถพัฒนาโมเดลที่เทียบเท่า OpenAI ได้ในราคาที่ถูกกว่า?</li>\n<li>ระดับการลงทุน CapEx ที่สูงเป็นประวัติการณ์คุ้มค่ากับความเสี่ยงเรื่องความต้องการที่อาจไม่ยั่งยืนหรือไม่?</li>\n<li>การเปลี่ยนผ่านสู่ระบบ \"Agents\" จะเปลี่ยนโครงสร้างรายได้ของซอฟต์แวร์องค์กรไปในทิศทางใด?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-16 01:22"
+  },
+  {
+    "ticker": "O",
+    "title": "Realty Income Corp. (O) Research Brief",
+    "summary": "Realty Income (O) หรือที่รู้จักกันในนาม \"The Monthly Dividend Company®\" เป็นกองทรัสต์เพื่อการลงทุนในอสังหาริมทรัพย์ (REIT) ในดัชนี S&P 500 ที่เน้นอ...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>Realty Income (O) หรือที่รู้จักกันในนาม \"The Monthly Dividend Company®\" เป็นกองทรัสต์เพื่อการลงทุนในอสังหาริมทรัพย์ (REIT) ในดัชนี S&P 500 ที่เน้นอสังหาริมทรัพย์เชิงพาณิชย์แบบผู้เช่ารายเดียว (Single-tenant) ภายใต้สัญญาเช่าแบบ Triple-net (ผู้เช่ารับผิดชอบภาษี ประกัน และค่าบำรุงรักษา) บริษัทมีพอร์ตทรัพย์สินกว่า 15,450 แห่ง กระจายอยู่ใน 50 รัฐของสหรัฐฯ และ 10 ประเทศในยุโรป โดยมีจุดเด่นคือการจ่ายเงินปันผลทุกเดือนและเพิ่มปันผลต่อเนื่องมาอย่างยาวนานกว่า 30 ปี</p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Portfolio Stability:</strong> อัตราการเช่า (Occupancy) สูงถึง 98.7% โดยกว่า 32.4% ของรายได้มาจากผู้เช่าระดับ Investment-grade (เช่น 7-Eleven, Walgreens, Dollar General)</li>\n<li><strong>Growth Engine:</strong> หลังการควบรวมกิจการ Spirit Realty มูลค่า $9.3B ในปี 2024 ทำให้บริษัทมีขนาดที่ใหญ่ขึ้นและกระจายความเสี่ยงได้ดีขึ้นมาก รวมถึงการขยายตัวในยุโรปที่มีอัตราผลตอบแทนสูงกว่า</li>\n<li><strong>Balance Sheet:</strong> แข็งแกร่งด้วย Credit Rating ระดับ A3/A- โดยมีอัตราส่วน Net Debt-to-EBITDA ที่ 5.4x และ Fixed Charge Coverage ที่ 4.7x</li>\n<li><strong>Dividend Reliability:</strong> จ่ายปันผลต่อเนื่อง 652 เดือน และเป็นหนึ่งใน Dividend Aristocrats <span class=\"source-tag clickable\" onclick=\"viewSource('sources/O/10-k-summary.md')\">sources/O/10-k-summary.md</span></li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings (FY2024 / Q1 2025 Context)",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Operational Return:</strong> ในปี 2024 บริษัทสร้างผลตอบแทนจากการดำเนินงานได้ 10.2% (AFFO Growth + Dividend Yield)</li>\n<li><strong>Recapture Rate:</strong> ในปี 2024 บริษัทสามารถต่อสัญญาเช่าได้ในอัตรา 105.6% ของค่าเช่าเดิม สะท้อนถึงคุณภาพและความต้องการในสินทรัพย์</li>\n<li><strong>Acquisition Strategy:</strong> มีการทำ Joint Venture มูลค่ารวมกว่า $2.5B กับสถาบันอย่าง Apollo และ GIC เพื่อใช้เงินทุนจากภายนอก (Private Capital) ในการขยายตัวแทนการออกหุ้นใหม่ <span class=\"source-tag clickable\" onclick=\"viewSource('sources/O/earnings-summary.md')\">sources/O/earnings-summary.md</span></li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Market Context & Sentiment (As of June 15, 2026)",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Latest News:</strong> ราคาหุ้นมักผันผวนผกผันกับ Bond Yield สหรัฐฯ โดยล่าสุดเผชิญแรงกดดันจากภาวะดอกเบี้ยสูง แต่ได้แรงหนุนจากการขยายพอร์ตในยุโรปที่ให้ Yield สูง (7%+)</li>\n<li><strong>Analyst Sentiment:</strong> ส่วนใหญ่มองเป็น \"Safe Haven\" ในกลุ่ม REIT โดยมีราคาเป้าหมายเฉลี่ยที่ประมาณ $64.50 - $68.00 <span class=\"source-tag\">Yi Market Intel</span></li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> การขยายตัวสู่ Data Centers และการใช้ Private Capital JV จะช่วยรักษาการเติบโตของ AFFO โดยไม่ทำให้ผู้ถือหุ้นเดิมถูก Dilute มากเกินไป</li>\n<li><strong>Bear case:</strong> ภาวะดอกเบี้ย \"Higher-for-longer\" จะเป็นปัจจัยกดดันราคาหุ้นและต้นทุนการรีไฟแนนซ์หนี้ในอนาคต</li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>Occupancy Rate ลดลงต่ำกว่า 97% อย่างต่อเนื่อง</li>\n<li>อัตราการเติบโตของ AFFO ต่อหุ้น (AFFO per share) ติดลบติดต่อกันเกิน 2 ไตรมาส</li>\n<li>การลดเงินปันผล (Dividend Cut) ซึ่งจะทำลายจุดขายหลักของบริษัท</li>\n</ul>"
+      },
+      {
+        "id": "7",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเชื่อมั่นในความยั่งยืนของธุรกิจค้าปลีกแบบ Brick-and-mortar ในยุค E-commerce หรือไม่?</li>\n<li>พอร์ตโฟลิโอของผู้เช่ามีความแข็งแกร่งพอที่จะผ่านวิกฤตเศรษฐกิจถดถอยได้หรือไม่?</li>\n<li>คุณพร้อมจะถือหุ้นผ่านช่วงเวลาที่ดอกเบี้ยขาขึ้น ซึ่งมักจะทำให้ราคาหุ้น REIT ลดลงหรือไม่?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-16 01:39"
+  },
+  {
+    "ticker": "ONDS",
+    "title": "Risk Assessment Brief: ONDS (Ondas Holdings Inc.)",
+    "summary": "\nHistorical Context: In late 2024, the company faced a critical liquidity crisis with only $2.",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Financial Liquidity & Solvency",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Historical Context:</strong> In late 2024, the company faced a critical liquidity crisis with only $2.9M in cash and a high burn rate (sources/ONDS/financials.md).</li>\n<li><strong>Current Liquidity:</strong> Dramatic improvement in 2025; cash position reported at $432.8M following successful capital raises (sources/ONDS/financials.md).</li>\n<li><strong>Revenue Growth:</strong> Significant turnaround from $1.5M (Q3 2024) to $10.1M (Q3 2025), a 582% increase (sources/ONDS/financials.md).</li>\n<li><strong>Profitability:</strong> Still operating at a net loss historically, but moving towards scale with a 2026 target of $110M+ (sources/ONDS/financials.md).</li>\n</ul>"
+      },
+      {
+        "id": "2",
+        "title": "Compliance & Legal Status",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Listing Status:</strong> Successfully maintained Nasdaq listing after a period of non-compliance in 2024 (sources/ONDS/market_info.md).</li>\n<li><strong>Intellectual Property:</strong> Strong position as a leader in the IEEE 802.16t industrial wireless standard (sources/ONDS/market_info.md).</li>\n<li><strong>Contracts:</strong> Robust contract pipeline in both defense (Iron Drone) and infrastructure (Siemens/Metra) (sources/ONDS/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Market Reputation & Operational Reliability",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Operational Scale:</strong> Successfully executing on an $8.2M European airport contract and military orders (sources/ONDS/market_info.md).</li>\n<li><strong>Analyst Confidence:</strong> Maintains a \"Strong Buy\" rating from major analysts despite past volatility (sources/ONDS/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "misc",
+        "title": "Summary Recommendation",
+        "html": "<p><strong>ONDS has transitioned from High Risk (2024) to Medium Risk (2026).</strong> The company successfully navigated a near-insolvency phase through aggressive capital raising and is now demonstrating exponential revenue growth. While the historical dilution is a factor for shareholders, from a partner perspective, ONDS now possesses the liquidity and contract backlog to be considered a stable long-term collaborator.</p>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-18 00:54"
+  },
+  {
+    "ticker": "PLTR",
+    "title": "Risk Assessment Brief: Palantir (PLTR)",
+    "summary": "\nElite Liquidity: Palantir holds $8.",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Financial Liquidity & Solvency",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Elite Liquidity:</strong> Palantir holds $8.0 Billion in cash and U.S. Treasuries with <strong>zero debt</strong>, providing a massive safety net (sources/PLTR/financials.md).</li>\n<li><strong>Exceptional Cash Flow:</strong> Adjusted Free Cash Flow margin is at 57%, demonstrating highly efficient capital generation (sources/PLTR/financials.md).</li>\n<li><strong>Hyper-Growth:</strong> Revenue growth of 85% YoY and a Rule of 40 score of 145% indicate a business that is scaling profitably at an unprecedented rate (sources/PLTR/financials.md).</li>\n</ul>"
+      },
+      {
+        "id": "2",
+        "title": "Compliance & Legal Status",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Government Trusted:</strong> Deeply integrated into U.S. defense and intelligence agencies, indicating a high level of security clearance and compliance (sources/PLTR/market_info.md).</li>\n<li><strong>Contract Stability:</strong> Closed 206 deals over $1M in a single quarter, diversifying its revenue base while maintaining large-scale enterprise contracts (sources/PLTR/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Market Reputation & Operational Reliability",
+        "html": "<ul class=\"brief-list\">\n<li><strong>AI Dominance:</strong> AIP is the industry standard for enterprise AI integration, with 133% growth in the US Commercial sector (sources/PLTR/financials.md).</li>\n<li><strong>Efficiency:</strong> The \"boot camp\" model has proven to be an effective and low-cost customer acquisition strategy (sources/PLTR/market_info.md).</li>\n<li><strong>Concentration Risk:</strong> 79% of revenue is derived from the US, which presents a geographic concentration risk, although this is currently the highest-growth AI market (sources/PLTR/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "misc",
+        "title": "Summary Recommendation",
+        "html": "<p><strong>Palantir (PLTR) presents a Low Risk profile with extremely high growth potential.</strong> Financially, it is pristine with no debt and multi-billion dollar cash reserves. Operationally, it has successfully transitioned into a commercial AI powerhouse while maintaining its backbone of stable government contracts. It is an exceptionally reliable strategic partner for long-term engagements.</p>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-18 00:55"
+  },
+  {
+    "ticker": "QQQI",
+    "title": "QQQI Research Brief",
+    "summary": "NEOS NASDAQ-100 High Income ETF (QQQI) ไม่ใช่บริษัทประกอบธุรกิจทั่วไป แต่เป็นกองทุนรวมดัชนี (ETF) ที่ออกแบบมาเพื่อสร้างกระแสเงินสดรายเดือนในระดับสู...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>NEOS NASDAQ-100 High Income ETF (QQQI) ไม่ใช่บริษัทประกอบธุรกิจทั่วไป แต่เป็นกองทุนรวมดัชนี (ETF) ที่ออกแบบมาเพื่อสร้างกระแสเงินสดรายเดือนในระดับสูง (Income generation) ควบคู่ไปกับการเติบโตของทุนผ่านดัชนี Nasdaq-100 โดยกองทุนถือหุ้นจริงที่เป็นองค์ประกอบของ Nasdaq-100 (เช่น Apple, Microsoft, Nvidia) และใช้กลยุทธ์ Option Overlay (การขายสิทธิซื้อ) บนดัชนี NDX เพื่อเก็บค่าธรรมเนียม (Premiums) มาจ่ายเป็นเงินปันผลให้กับผู้ถือหน่วยลงทุน</p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Revenue trend:</strong> รายได้ของกองทุนมาจากสองส่วนหลักคือ เงินปันผลจากหุ้นที่ถืออยู่ และค่าธรรมเนียมจากการขาย Option (Premiums) ซึ่งจะแปรผันตามความผันผวนของตลาด (Volatility)</li>\n<li><strong>Margin trend:</strong> กองทุนเน้นประสิทธิภาพด้านภาษีผ่าน Section 1256 Contracts และการบริหารจัดการแบบ Bull Call Spread เพื่อให้กองทุนยังสามารถเติบโตไปตามตลาดได้บ้างในช่วงขาขึ้น (Upside participation) แทนที่จะถูกจำกัดกำไรเหมือนกองทุน Covered Call แบบดั้งเดิม</li>\n<li><strong>Balance sheet feel:</strong> แข็งแกร่งเนื่องจากถือครองหุ้น Blue-chip ขนาดใหญ่ใน Nasdaq-100 เป็นหลัก โดยมีนโยบายลงทุนในหุ้นกลุ่มนี้อย่างน้อย 80% ของสินทรัพย์</li>\n<li><strong>Capital allocation pattern:</strong> เน้นการจ่ายเงินปันผลรายเดือนในระดับสูง (Targeted Yield ~14% ต่อปี) โดยมีการบริหารจัดการภาษีแบบ Return of Capital (ROC) เพื่อประโยชน์ของผู้ลงทุนระยะยาว</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings",
+        "html": "<ul class=\"brief-list\">\n<li>ไม่พบ Source ข้อมูลดิบ (ไม่พบไฟล์ใน sources/QQQI/)</li>\n<li>*อัปเดตจากข่าวตลาด (11 มิ.ย. 2026):* ประกาศวัน Ex-dividend 16 มิ.ย. 2026 คาดการณ์จ่ายที่ $0.63–$0.66 ต่อหุ้น (Yield ~14%) สินทรัพย์ (AUM) พุ่งแตะ 12.2 พันล้านดอลลาร์</li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Market Context & Sentiment (Yi's Report - June 2026)",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Latest News:</strong> ตลาดจับตา SpaceX IPO ใน Nasdaq (12 มิ.ย.) ซึ่งอาจกระตุ้นกลุ่ม Tech ขณะที่เงินเฟ้อ CPI ดีดตัวขึ้นที่ 4.2% กดดันการประชุม Fed สัปดาห์หน้า</li>\n<li><strong>Analyst Sentiment:</strong> สายเทคนิคแนะนำระวังราคาหลุดเส้นค่าเฉลี่ย ทดสอบแนวรับ $53.60–$54.00 แต่สายพื้นฐานยังยกให้เป็น Best-in-class สำหรับกลุ่ม Income Investors เนื่องจากถือหุ้นจริงและบริหารภาษีดี</li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> กระแส SpaceX IPO และ AI Super-cycle ช่วยหนุนกลุ่ม Tech ให้ฟื้นตัวจากแนวรับ พร้อมรับปันผลระดับ 14% เป็นกันชนความผันผวน (Yield Cushion)</li>\n<li><strong>Bear case:</strong> ราคาน้ำมันพุ่งและความตึงเครียดในตะวันออกกลางอาจกดดันให้ Fed ขึ้นดอกเบี้ยแบบ Surprise ซึ่งจะฉุดกลุ่ม Nasdaq และ NAV ของกองทุนลงรุนแรง</li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>Fed ประกาศขึ้นดอกเบี้ยทันทีแบบที่ตลาดไม่คาดคิด</li>\n<li>ดัชนี Nasdaq-100 หลุดแนวรับสำคัญที่ 27,750 จุด</li>\n<li>อัตราการจ่ายปันผลลดลงอย่างมีนัยสำคัญจนต่ำกว่า 10% หรือ NAV ลดลงต่อเนื่องจนกระทบกระแสเงินสดสุทธิ</li>\n</ul>"
+      },
+      {
+        "id": "7",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเข้าใจความแตกต่างระหว่างการถือ QQQ ปกติกับการถือ QQQI ที่เน้นปันผลสูงหรือไม่?</li>\n<li>คุณยอมรับได้หรือไม่หากมูลค่าเงินต้น (NAV) อาจจะเติบโตช้ากว่าดัชนี Nasdaq-100 ในช่วงที่ตลาดเป็นขาขึ้นรุนแรง?</li>\n<li>กลยุทธ์การบริหารจัดการแบบ Active Management ของ NEOS มีความน่าเชื่อถือเพียงพอสำหรับคุณในระยะยาวหรือไม่?</li>\n<li>สัดส่วนของ Return of Capital (ROC) ในปันผลที่คุณได้รับ สอดคล้องกับแผนภาษีส่วนบุคคลของคุณหรือไม่?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-11 20:36"
+  },
+  {
+    "ticker": "RKLB",
+    "title": "Rocket Lab USA, Inc. (RKLB) Research Brief",
+    "summary": "Rocket Lab เป็นผู้เล่นเบอร์ 2 ในอุตสาหกรรมอวกาศโลก (รองจาก SpaceX) ที่ประสบความสำเร็จอย่างสูงในการปล่อยจรวดขนาดเล็ก (Electron) บริษัทได้ขยายธุรกิจจ...",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Company snapshot",
+        "html": "<p>Rocket Lab เป็นผู้เล่นเบอร์ 2 ในอุตสาหกรรมอวกาศโลก (รองจาก SpaceX) ที่ประสบความสำเร็จอย่างสูงในการปล่อยจรวดขนาดเล็ก (Electron) บริษัทได้ขยายธุรกิจจากเพียงแค่การเป็น \"บริษัทจรวด\" ไปสู่ \"End-to-end Space Company\" ที่ออกแบบและผลิตดาวเทียม รวมถึงชิ้นส่วนอวกาศครบวงจร (Space Systems) และกำลังพัฒนาจรวดขนาดใหญ่ที่นำกลับมาใช้ใหม่ได้ (Neutron) เพื่อท้าทายตลาดวงโคจรขนาดกลาง</p>"
+      },
+      {
+        "id": "2",
+        "title": "Fundamentals signal",
+        "html": "<ul class=\"brief-list\">\n<li>ไม่พบ Source ข้อมูลดิบ (ไม่พบไฟล์ใน sources/RKLB/)</li>\n<li>*ข้อมูลจาก Yi (ก.พ. 2025):* รายได้ Q4/2024 เติบโต 120% YoY แตะ 132.4 ล้านดอลลาร์ โดยมีรายได้หลักมาจากธุรกิจ Space Systems</li>\n<li><strong>Backlog Strength:</strong> มีคำสั่งซื้อค้างส่ง (Backlog) สูงถึง 1,050 ล้านดอลลาร์ สะท้อนถึงความเชื่อมั่นของลูกค้าทั้งภาครัฐและเอกชน</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Latest earnings",
+        "html": "<ul class=\"brief-list\">\n<li>ไม่พบ Source ข้อมูลดิบ (ไม่พบไฟล์ใน sources/RKLB/)</li>\n<li>*สรุปผลประกอบการ (27 ก.พ. 2025):* รายได้ทุบสถิติใหม่ แต่หุ้นมีการปรับฐานเนื่องจาก Guidance ไตรมาสถัดไปต่ำกว่าคาด และตลาดรอคอยความชัดเจนของ Neutron</li>\n<li><strong>New Contract:</strong> เซ็นสัญญาเหมาปล่อยจรวด Electron กับ iQPS จำนวน 8 เที่ยวบิน สำหรับปี 2025-2026</li>\n</ul>"
+      },
+      {
+        "id": "4",
+        "title": "Market Context & Sentiment (Yi's Report - February 2025)",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Latest News:</strong> ยืนยันเป้าหมายปล่อยจรวด Neutron ครั้งแรกในครึ่งหลังของปี 2025 (H2 2025) ซึ่งเป็น Milestone สำคัญที่จะเปลี่ยนบริษัทจากบริษัทขนาดเล็กเป็นบริษัทขนาดใหญ่</li>\n<li><strong>Analyst Sentiment:</strong> ส่วนใหญ่แนะนำ \"Buy\" / \"Moderate Buy\" โดยมองว่า Rocket Lab เป็น \"Second Source\" ที่สำคัญสำหรับรัฐบาลสหรัฐฯ เพื่อลดการผูกขาดของ SpaceX</li>\n</ul>"
+      },
+      {
+        "id": "5",
+        "title": "Bull case / Bear case",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Bull case:</strong> การเติบโตอย่างก้าวกระโดดของธุรกิจ Space Systems (ขายชิ้นส่วนดาวเทียม) และความสำเร็จในการพัฒนา Neutron ซึ่งจะช่วยให้บริษัทเข้าถึงตลาดที่มีมูลค่าสูงขึ้นมาก รวมถึงความต้องการจากโครงการดาวเทียมทางทหาร</li>\n<li><strong>Bear case:</strong> ความเสี่ยงในการพัฒนา Neutron (Delay Risk) หากมีการเลื่อนปล่อยจรวดออกไปอีก รวมถึงการแข่งขันด้านราคาที่รุนแรงจาก SpaceX และ Valuation ที่ค่อนข้างแพงเมื่อเทียบกับกำไรในปัจจุบัน</li>\n</ul>"
+      },
+      {
+        "id": "6",
+        "title": "Kill conditions",
+        "html": "<ul class=\"brief-list\">\n<li>จรวด Neutron เลื่อนการปล่อยครั้งแรก (Maiden Flight) ออกไปเกินปี 2025 อย่างมีนัยสำคัญ</li>\n<li>เกิดความล้มเหลวในการปล่อยจรวด Electron ติดต่อกัน (Mission Failure) จนทำให้เสียความเชื่อมั่น</li>\n<li>สูญเสียสัญญาสำคัญจากภาครัฐ (เช่น SDA หรือ NASA) ให้กับคู่แข่งรายใหม่ๆ</li>\n</ul>"
+      },
+      {
+        "id": "7",
+        "title": "What to ask before owning it",
+        "html": "<ul class=\"brief-list\">\n<li>คุณเชื่อมั่นหรือไม่ว่าโลกต้องการ \"เบอร์ 2\" เพื่อคานอำนาจ SpaceX?</li>\n<li>คุณเข้าใจความเสี่ยงของบริษัทเทคโนโลยีอวกาศที่ยังอยู่ในช่วงขาดทุนแต่รายได้โตเร็วหรือไม่?</li>\n<li>คุณพร้อมจะถือหุ้นผ่านช่วง \"Make or Break\" ของการปล่อย Neutron ในปี 2025 หรือไม่?</li>\n</ul>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-11 20:43"
+  },
+  {
+    "ticker": "TSM",
+    "title": "Risk Assessment Brief: TSMC (TSM)",
+    "summary": "\nExceptional Profitability: Net profit margin of 50.",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Financial Liquidity & Solvency",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Exceptional Profitability:</strong> Net profit margin of 50.5% and gross margin of 66.2% as of Q1 2026 (sources/TSM/financials.md).</li>\n<li><strong>Strong Liquidity:</strong> Massive cash reserve of ~$106 Billion USD, accounting for 39% of total assets (sources/TSM/financials.md).</li>\n<li><strong>Solvency:</strong> Very low debt-to-equity ratio (~0.17x), representing elite financial stability (sources/TSM/financials.md).</li>\n<li><strong>Revenue Trajectory:</strong> Expected to grow >30% in 2026, driven by AI and 3nm/2nm demand (sources/TSM/financials.md).</li>\n</ul>"
+      },
+      {
+        "id": "2",
+        "title": "Compliance & Legal Status",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Technology Leadership:</strong> Successfully maintaining lead in A16 and 2nm nodes with key partners like Apple and NVIDIA (sources/TSM/market_info.md).</li>\n<li><strong>Regulatory Compliance:</strong> Actively managing US CHIPS Act requirements and Arizona fab build-out (sources/TSM/market_info.md).</li>\n<li><strong>Legal Monitoring:</strong> Ongoing ITC patent inquiry monitoring, though no immediate material impact reported (sources/TSM/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "3",
+        "title": "Market Reputation & Operational Reliability",
+        "html": "<ul class=\"brief-list\">\n<li><strong>Strategic Moat:</strong> 74% of revenue comes from advanced nodes (7nm and below), creating a high barrier to entry (sources/TSM/financials.md).</li>\n<li><strong>Operational Strength:</strong> Meeting massive CapEx requirements (up to $56B in 2026) while maintaining high free cash flow (sources/TSM/financials.md).</li>\n<li><strong>Geopolitical Sensitivity:</strong> High concentration of manufacturing in Taiwan remains the primary risk factor, though Arizona expansion provides long-term mitigation (sources/TSM/market_info.md).</li>\n</ul>"
+      },
+      {
+        "id": "misc",
+        "title": "Summary Recommendation",
+        "html": "<p><strong>TSMC presents a Low Risk profile with high strategic importance.</strong> Financially, it is one of the strongest entities globally with unrivaled profit margins and cash reserves. While geopolitical tensions in the Taiwan Strait are a permanent external risk, the company's \"Silicon Shield\" status and aggressive international expansion make it an essential and reliable business partner.</p>"
+      }
+    ],
+    "has_check": false,
+    "last_updated": "2026-06-18 00:54"
+  }
+];
+        const sourcesData = {
+  "sources/README.md": "Folder นี้เก็บ source ดิบสำหรับ workflow ใน project นี้\n\n## สำหรับ `/brief <TICKER>`\n\nเก็บไฟล์แยกตาม ticker:\n\n- `sources/<TICKER>/10-k-*.md` หรือ `10-k-summary.md` สำหรับ annual report / business fundamentals\n- `sources/<TICKER>/transcript.md`, `earnings-summary.md`, หรือ `q*-call.md` สำหรับ latest earnings\n- ห้ามใช้ไฟล์ placeholder/mock เป็น source จริง\n\nทุก bullet ใน brief ที่อิง source local ต้อง cite path เต็ม เช่น `(source: sources/AAPL/transcript.md)`\n\n## สำหรับ `/check <PARTNER>`\n\nเก็บไฟล์แยกตามชื่อ partner:\n\n- `sources/<PARTNER>/financials.md` สำหรับข้อมูลการเงิน\n- `sources/<PARTNER>/registration.md` สำหรับข้อมูลจดทะเบียน กฎหมาย และ compliance\n\nถ้าไม่พบ source ให้รายงานตามจริง ห้ามแต่งข้อมูลเอง\n",
+  "sources/TSM/financials.md": "---\ncompany: TSMC (Taiwan Semiconductor Manufacturing Company)\ndocument_type: financial_summary\nlast_updated: 2026-06-17\n---\n\n# TSMC Financial Summary (Q1 2026)\n\n## 1. Key Income Statement Figures (Q1 2026)\n- **Revenue:** NT$1,134.10 Billion (US$35.90B) - Up 35.1% YoY.\n- **Net Income:** NT$572.48 Billion - Up 58.3% YoY.\n- **Gross Margin:** 66.2%\n- **Operating Margin:** 58.1%\n- **Net Profit Margin:** 50.5%\n\n## 2. Key Balance Sheet Figures\n- **Cash & Marketable Securities:** NT$3,383.60 Billion (~US$106 Billion).\n- **Total Assets:** NT$8,660.95 Billion.\n- **Cash Position:** 39.0% of total assets.\n- **Debt-to-Equity Ratio:** Historically low (~0.17x), indicating high solvency.\n\n## 3. Capital Expenditure (CapEx) & Cash Flow\n- **CapEx (Q1 2026):** NT$351 Billion (US$11.1B).\n- **Full Year 2026 CapEx Budget:** US$52 Billion - US$56 Billion.\n- **Free Cash Flow:** NT$348.21 Billion.\n\n## 4. Revenue by Technology (Nodes)\n- **3nm:** 25% of wafer revenue.\n- **5nm:** 36% of wafer revenue.\n- **7nm and below (Total):** 74% of wafer revenue.\n\n*Source: Compiled from Q1 2026 Earnings Release and public financial filings.*\n",
+  "sources/TSM/market_info.md": "# Market Intelligence Report: TSMC (TSM)\n**Report Date:** June 17, 2026\n\n## 1. Manufacturing & Technology\n- **A16 (1.6nm):** Production-ready by H2 2026. NVIDIA's \"Feynman\" GPU confirmed as a lead customer.\n- **2nm (N2):** Mass production scaling for late 2026. Apple has secured ~50% of early capacity for A20/M6 chips.\n- **US Operations:** 10-year partnership with Amkor Technology for packaging/testing in Arizona.\n\n## 2. Geopolitical & Regulatory Risks\n- **Taiwan Strait:** Ongoing tension with high frequency of air incursions by China; G7 maintains opposition to status quo changes.\n- **Export Controls:** Potential new Taiwan laws criminalizing AI chip leaks to China.\n- **US CHIPS Act:** Year-end 2026 tax deadline (Section 48D) accelerating Arizona fab build-out.\n\n## 3. Market Sentiment\n- **Analyst Rating:** Strong Buy (Aletheia Capital, etc.).\n- **Price Target:** Targets raised up to $700 (ADR) based on AI monopoly and pricing power.\n- **Key Risks:** Customer diversification efforts by Samsung Foundry (Google, Tesla) and rising 2nm wafer costs (+50% vs 3nm).\n\n*Source: Market intelligence gathering (Jun 2026).*\n",
+  "sources/ACME_CORP/financials.md": "---\ncompany: ACME CORP\ndocument_type: financial_statement\nfiscal_year: FY2025\nsource_url: internal_upload\n---\n\n# ACME CORP Financial Statement Excerpt (FY2025)\n\n## 1. Key Balance Sheet Figures\n- Cash & Cash Equivalents: $2,000,000 (down from $5,000,000 in FY2024)\n- Total Current Assets: $15,000,000\n- Total Current Liabilities: $12,000,000\n- Total Debt (Short & Long term): $25,000,000\n- Total Shareholders' Equity: $10,000,000\n\n## 2. Key Income Statement Figures\n- Annual Revenue: $48,000,000\n- Gross Profit Margin: 15% (down from 22% in FY2024)\n- Operating Income: -$1,200,000\n- Net Income: -$1,500,000 (Net Loss)\n\n## 3. Financial Analysis Context\n- Current Ratio: 1.25 (Current Assets / Current Liabilities), indicating a tight liquidity position.\n- Debt-to-Equity Ratio: 2.5 ($25,000,000 / $10,000,000), representing very high leverage and solvency risk.\n- Monthly Cash Burn Rate: Average of $500,000 per month.\n- Estimated Cash Runway: 4 months ($2,000,000 cash balance / $500,000 burn rate) unless new financing or partnership cash flow is secured.\n- Accounts Payable Aging: 62 days (payments to suppliers are increasingly delayed).\n",
+  "sources/ACME_CORP/registration.md": "---\ncompany: ACME CORP\ndocument_type: registry_compliance\nregistration_date: 2018-04-12\nstatus: Active\n---\n\n# ACME CORP Corporate Registry & Legal Profile\n\n## 1. Registry Details\n- Entity Name: ACME CORP (Registered ID: DE-689320)\n- Place of Incorporation: Delaware, USA\n- Principal Place of Business: Austin, Texas, USA\n- Share Capital: $5,000,000\n- Principal Shareholding Structure:\n  - John Doe (Founder & CEO): 40%\n  - Austin Capital Partners (VC Fund): 35%\n  - Retail & Angel Investors: 25%\n\n## 2. Licenses & Permits\n- Manufacturing License: Active (Expires 2027-12-31)\n- Environmental Operations Clearance: Under Review (Current temporary permit valid until 2026-09-30)\n\n## 3. Pending Litigation & Disputes\n- **Beta Logistics vs. ACME CORP (Case No. TX-2025-CV-8821):** Breach of contract lawsuit filed in Texas District Court by supplier Beta Logistics, seeking $850,000 in unpaid shipping fees and damages. ACME CORP claims services were not delivered according to SLA. Trial date set for November 2026.\n- **Competitor Patent Dispute:** Patent infringement letter received from Prime Inc. regarding proprietary nozzle designs. Dispute is currently in pre-litigation arbitration.\n- **IRS Audit Notification:** IRS notification received regarding a $150,000 mismatch in R&D tax credit claims for FY2024. ACME CORP has appealed and is submitting supporting documentation.\n",
+  "sources/MSFT/earnings-summary.md": "# Microsoft (MSFT) Earnings Summary (Q2 FY2026)\n\n**Quarter Ended:** December 31, 2025\n**Release Date:** January 28, 2026\n\n### 1. Key Metrics\n- **Revenue:** $81.3 Billion (+17% YoY).\n- **Microsoft Cloud Revenue:** $51.5 Billion (+26% YoY). First time exceeding $50B in a single quarter.\n- **Operating Income:** $38.3 Billion (+21% YoY).\n- **Diluted EPS (Non-GAAP):** $4.14 (+24% YoY).\n\n### 2. AI & Strategic Highlights\n- **Microsoft 365 Copilot:** 15 million paid seats (+160% QoQ growth).\n- **GitHub Copilot:** 4.7 million paid subscribers (+75% YoY).\n- **OpenAI Investment:** Net gain of $7.6B from investment valuation impact.\n- **Infrastructure:** Added ~1GW of data center capacity during the quarter.\n\n### 3. Management Outlook\n- Continued focus on \"AI monetization\" and transitioning to \"Autonomous Agents.\"\n- Azure growth remains the primary driver despite intense competition.\n- CapEx expected to remain elevated to support multi-year AI demand.\n",
+  "sources/MSFT/10-k-summary.md": "# Microsoft (MSFT) 10-K Summary (FY2025)\n\n**Fiscal Year Ended:** June 30, 2025\n**Source:** SEC Filing 10-K (Summary compiled via Research)\n\n### 1. Business Segments\n- **Intelligent Cloud:** Azure, SQL Server, Windows Server, Visual Studio, GitHub, and Enterprise Services. Azure grew 34% in FY25.\n- **Productivity and Business Processes:** Office 365 Commercial, Microsoft 365 Consumer, LinkedIn, and Dynamics business solutions.\n- **More Personal Computing:** Windows OEM, Devices (Surface), Gaming (Xbox content & services, Activision Blizzard), and Search/News Advertising.\n\n### 2. Financial Highlights (FY2025)\n- **Total Revenue:** $281.7 Billion (+15% YoY)\n- **Operating Income:** $128.5 Billion (+17% YoY)\n- **Net Income:** $101.8 Billion (+16% YoY)\n\n### 3. Capital Allocation\n- Approved a new $60 Billion share repurchase program in September 2024.\n- Significant increase in CapEx to support AI infrastructure and data centers.\n\n### 4. Key Risks\n- **AI Infrastructure Costs:** High CapEx requirements for AI scaling.\n- **Cybersecurity:** Potential for major security breaches or outages.\n- **Regulatory Scrutiny:** Antitrust investigations in gaming and cloud.\n- **Competition:** Intense pressure from AWS, Google Cloud, and AI-first startups.\n",
+  "sources/O/earnings-summary.md": "# Realty Income (O) Earnings Summary (FY2024 Recap)\n\n**Period:** Full Year 2024\n**Release Date:** Feb 2025\n\n### 1. Key Performance Metrics\n- **Total Operational Return:** 10.2% (AFFO per share growth + dividend yield).\n- **Dividend Aristocrat:** 30 consecutive years of dividend increases.\n- **Rent Recapture:** 105.6% on 196 properties re-leased during the year.\n\n### 2. Acquisition & Investment\n- Closed **Spirit Realty Capital** merger ($9.3B).\n- Completed **$770M sale-leaseback** with 7-Eleven.\n- Leveraged Private Capital JVs to support growth while maintaining credit metrics.\n\n### 3. Outlook\n- Focus on accretive acquisitions in Europe and emerging asset classes.\n- Target maintaining leverage around the mid-5x range for Net Debt/EBITDA.\n",
+  "sources/O/10-k-summary.md": "# Realty Income (O) 10-K Summary (FY2024 Context)\n\n**Fiscal Year:** 2024 (Compiled from Research)\n**Source:** SEC Filings & Annual Reports\n\n### 1. Portfolio Metrics\n- **Total Properties:** 15,450+ post-Spirit Realty merger.\n- **Occupancy Rate:** 98.7% (Dec 31, 2024).\n- **Client Quality:** 32.4% investment-grade clients.\n- **Top Clients:** 7-Eleven (3.5%), Walgreens (3.3%), Dollar General (3.3%).\n- **Recapture Rate:** 105.6% on re-leased units.\n\n### 2. Financial Strength\n- **Credit Rating:** A3 (Moody's) / A- (S&P).\n- **Net Debt-to-EBITDA:** 5.4x.\n- **Fixed Charge Coverage:** 4.7x.\n- **Liquidity:** $3.7 Billion.\n\n### 3. Strategic Initiatives\n- **Europe Expansion:** Present in 10 countries (UK, Spain, Italy, Germany, etc.).\n- **Diversification:** Entry into Data Centers (JV with Digital Realty) and Gaming (Encore Boston Harbor).\n- **Private Capital:** Strategic JVs with Apollo Global Management ($1B) and GIC ($1.5B).\n",
+  "sources/PLTR/financials.md": "---\ncompany: Palantir Technologies (PLTR)\ndocument_type: financial_summary\nlast_updated: 2026-06-17\n---\n\n# Palantir (PLTR) Financial Summary (Q1 2026)\n\n## 1. Key Income Statement Figures (Q1 2026)\n- **Revenue:** $1.633 Billion (up 85% YoY).\n- **GAAP Net Income:** $871 Million (53% Net Margin).\n- **Adjusted EPS:** $0.33 (beating estimates).\n- **Rule of 40 Score:** 145% (85% revenue growth + 60% adjusted operating margin).\n\n## 2. Key Balance Sheet & Cash Flow\n- **Cash, Equivalents & US Treasuries:** $8.0 Billion.\n- **Total Debt:** $0 (Zero Debt).\n- **Cash from Operations:** $899 Million (55% margin).\n- **Adjusted Free Cash Flow:** $925 Million (57% margin).\n\n## 3. Segment Growth (US Market Dominance)\n- **Total US Revenue:** $1.282 Billion (up 104% YoY), accounting for 79% of total revenue.\n- **US Commercial Revenue:** $595 Million (up 133% YoY).\n- **US Government Revenue:** $687 Million (up 84% YoY).\n\n## 4. Full Year 2026 Guidance (Updated)\n- **Revenue Target:** $7.650B - $7.662B (~71% YoY growth).\n- **US Commercial Revenue Target:** >$3.224B (>120% growth).\n- **Adjusted Free Cash Flow Target:** $4.2B - $4.4B.\n\n*Source: Compiled from Q1 2026 Earnings Release and public financial filings (May 2026).*\n",
+  "sources/PLTR/market_info.md": "# Market Intelligence Report: Palantir (PLTR)\n**Report Date:** June 17, 2026\n\n## 1. Product & Strategy Momentum\n- **Artificial Intelligence Platform (AIP):** Remains the core growth driver. Success is attributed to \"boot camps\" that rapidly convert prospects into high-value contracts.\n- **Customer Base:** Total customer count reached 1,007 (up 31% YoY). Closed 206 deals of $1M+ in Q1 2026 alone.\n- **Market Positioning:** Transitioning from a niche government contractor to a dominant commercial AI infrastructure provider in the US.\n\n## 2. Key Contracts & Partnerships\n- **USDA Contract:** Up to $300 Million ceiling for farmland security and supply chain resilience.\n- **US Government Expansion:** Continued strength in defense and intelligence, with 84% YoY growth in the US government segment.\n\n## 3. Market Sentiment\n- **Analyst Outlook:** Extremely Bullish following the \"shattering\" of the Rule of 40 metric (145%).\n- **Key Risks:** High concentration in the US market (79% of revenue); potential for volatility in government contract timing; execution risk in maintaining triple-digit commercial growth rates.\n\n*Source: Market intelligence gathering and Q1 2026 performance analysis.*\n",
+  "sources/ONDS/financials.md": "---\ncompany: Ondas Holdings Inc. (ONDS)\ndocument_type: financial_summary\nlast_updated: 2026-06-17\n---\n\n# ONDS Financial Summary (Historical & Current Context)\n\n## 1. Q3 2024 Financial Results (Audit Baseline)\n- **Revenue:** $1.5 Million (down from $2.7M in Q3 2023)\n- **Net Loss:** $9.5 Million\n- **Cash Position:** $2.9 Million (as of Sept 30, 2024)\n- **Monthly Burn Rate (Est):** ~$2.3 Million ($7.1M operating expenses per quarter)\n- **Cash Runway (Late 2024):** Critical (< 2 months without financing)\n\n## 2. Fiscal Year 2025 Performance\n- **Annual Revenue:** Significant growth reaching ~$36 Million+ driven by OAS drone systems and rail network upgrades.\n- **Q3 2025 Revenue:** $10.1 Million (582% YoY increase).\n- **Liquidity Event:** Massive public offering and capital raises resulted in a cash position of $432.8 Million by Sept 30, 2025.\n\n## 3. 2026 Projections & Current Status\n- **Target Revenue 2026:** $110 Million+\n- **Solvency:** Highly improved liquidity following 2025 capital raises.\n- **Backlog:** Strong bookings of $14.4M reported in late 2024 have converted into a steady revenue stream.\n\n*Source: Compiled from public 8-K filings and investor relations reports (Jun 2026).*\n",
+  "sources/ONDS/market_info.md": "# Market Intelligence Report: ONDS (Ondas Holdings Inc.)\n**Report Date:** June 17, 2026\n\n## 1. Recent Contracts & Partnerships\n- **Defense Sector:** Airobotics (subsidiary) continues to secure major orders for the Iron Drone Raider, including a multi-layered security integration for an Israeli defense firm.\n- **Infrastructure:** Siemens partnership for 900 MHz rail upgrades (Metra Chicago) is fully operational.\n- **Civilian Security:** €8.2 Million contract for Counter-UAS systems at a major European airport.\n\n## 2. Regulatory & Listing Status\n- **Nasdaq Compliance:** Successfully maintained listing status; share price recovered above $1.00 following 2025 growth.\n- **IP & Standards:** Leading the IEEE 802.16t standard for industrial wireless systems.\n\n## 3. Market Sentiment\n- **Analyst Rating:** Strong Buy (H.C. Wainwright, Northland Capital).\n- **Price Targets:** Average ~$18-20 range.\n- **Key Risks:** Share dilution remains a concern for legacy investors due to 2025 capital raises; execution speed in defense contracts.\n\n*Source: Market intelligence gathering (Jun 2026).*\n",
+  "sources/AAPL/10-k-fy2024.md": "---\nticker: AAPL\nsource_type: 10k_excerpt\nfiscal_year: FY2024\nsource_url: https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm\n---\n\n# Apple 2024 Form 10-K Excerpt\n\nSource: Apple Inc. Form 10-K for fiscal year ended September 28, 2024, filed with the SEC.\n\n## Item 1: Business / Competition\n\nApple designs and develops most of the integrated solution for its products, including hardware, operating systems, software applications, and related services. The company competes across smartphones, personal computers, tablets, wearables, accessories, and services. Key competitive factors include price, product and service features, security, performance, quality, reliability, design innovation, third-party software and accessories ecosystem, marketing and distribution, service and support, and corporate reputation.\n\nApple notes that its markets are highly competitive, with aggressive price competition, short product life cycles, rapid technology changes, and competitors that may have broader product lines, lower-priced products, larger installed bases, or cost structures that allow products to be sold at little or no profit.\n\n## Item 7: MD&A / Net Sales by Category\n\nNet sales by category for fiscal 2024, 2023, and 2022 (dollars in millions):\n\n| Category | 2024 | Change vs 2023 | 2023 | Change vs 2022 | 2022 |\n|---|---:|---:|---:|---:|---:|\n| iPhone | $201,183 | 0% | $200,583 | -2% | $205,489 |\n| Mac | $29,984 | 2% | $29,357 | -27% | $40,177 |\n| iPad | $26,694 | -6% | $28,300 | -3% | $29,292 |\n| Wearables, Home and Accessories | $37,005 | -7% | $39,845 | -3% | $41,241 |\n| Services | $96,169 | 13% | $85,200 | 9% | $78,129 |\n| Total net sales | $391,035 | 2% | $383,285 | -3% | $394,328 |\n\nManagement commentary in the 10-K says iPhone net sales were relatively flat in 2024 compared with 2023. Mac net sales increased primarily because of higher laptop sales. iPad net sales decreased primarily because of lower iPad Pro and entry-level iPad sales, partly offset by higher iPad Air sales. Wearables, Home and Accessories decreased primarily because of lower Wearables and Accessories sales. Services net sales increased primarily because of higher sales from advertising, the App Store, and cloud services.\n\n## Gross Margin Commentary\n\nThe 10-K states that Products gross margin and Products gross margin percentage increased in 2024 compared with 2023 due to cost savings, partly offset by product mix and foreign currency weakness. Services gross margin increased primarily because of higher Services net sales, while Services gross margin percentage increased because of a different Services mix.\n\n## Item 1A: Risk Factors Excerpt\n\nApple says its business can be materially affected by factors including intense competition, pricing pressure, rapid technology change, product quality issues, supply constraints, dependence on components from single or limited sources, cybersecurity and system disruptions, legal and regulatory proceedings, and gross margin pressure.\n\nSelected risks for brief use:\n\n- Competition and innovation: Apple must keep introducing competitive products, services, and technologies on time. Failure to do so could harm demand, margin, and competitive position.\n- Supply chain and components: Some components are obtained from single or limited sources, and custom components can face capacity constraints during new technology ramps.\n- Product quality and AI features: New and complex technologies, including artificial intelligence features, can increase safety, accuracy, and user-experience risks.\n- Developer ecosystem: Apple depends partly on third-party developers continuing to build and maintain software and services for Apple platforms.\n- Cybersecurity and IT systems: Apple and its global supply chain depend on complex IT systems and face cyberattacks, ransomware, data loss, and operational disruption risks.\n- Legal and regulatory: Government investigations, legal proceedings, and regulatory changes can force changes to business practices, affect privacy/security reputation, and create financial or operational impact.\n- Margin pressure: Gross margins are exposed to pricing pressure, competition, component costs, product mix, foreign exchange, inflation, supply shortages, and regulatory changes.\n",
+  "sources/AAPL/transcript.md": "---\nticker: AAPL\nsource_type: earnings_press_release\nquarter: Q2 2026\nsource_url: https://www.apple.com/newsroom/2026/04/apple-reports-second-quarter-results/\n---\n\n# Apple Q2 2026 Earnings Call Transcript\n\n**Date:** April 30, 2026\n**Participants:**\n- Tim Cook (CEO)\n- John Ternus (Incoming CEO)\n- Kevan Parekh (CFO)\n- Suhasini Chandramouli (Director of Investor Relations)\n\n## Executive Summary\nApple reported a record March quarter with revenue of $111.2 billion, up 17% year-over-year. Diluted EPS was $2.01, up 22%. The active installed base reached an all-time high of over 2.5 billion devices.\n\n## Opening Remarks\n\n**Suhasini Chandramouli:**\n\"Good afternoon, and welcome to the Apple Q2 fiscal year 2026 earnings conference call... Speaking first today is Apple's CEO, Tim Cook; John Ternus will be joining after that for a brief set of remarks, and he'll be followed by CFO, Kevan Parekh.\"\n\n**Tim Cook (CEO):**\n\"Good afternoon everyone, and thanks for joining the call. Today Apple is proud to report our best March quarter ever, with revenue of $111.2 billion and double-digit growth across every geographic segment. iPhone achieved a March quarter revenue record, fueled by such extraordinary demand for the iPhone 17 lineup.\"\n\n**John Ternus (Incoming CEO):**\n\"During the quarter, Services achieved yet another all-time record, and we were excited to introduce remarkable new products... Including the addition of the iPhone 17e and the M4-powered iPad Air, along with the launch of MacBook Neo.\"\n\n## Financial Results by Segment\n- **iPhone:** $57 billion (up 22% YoY)\n- **Services:** $31 billion (up 16% YoY) - All-time record\n- **Mac:** $8.4 billion (up 6% YoY)\n- **Gross Margin:** 49.27% (Reported Q2 2026)\n- **Shareholder Returns:** $100 billion new buyback authorized; dividend increased 4%.\n\n## Future Guidance & Management Commentary\n- **Revenue Guidance:** Expected to grow 14% to 17% YoY in the June quarter.\n- **AI Strategy:** Unveiled \"Apple Intelligence\" and Siri AI.\n- **Risk Note:** Over 1.3 billion older iPhones cannot access advanced AI features, potentially limiting the immediate upgrade cycle.\n- **Leadership:** John Ternus to succeed Tim Cook as CEO on September 1, 2026.\n",
+  "sources/AAPL/placeholder-fy2025-10k-do-not-use.md": "---\nticker: AAPL\nsource_type: placeholder_do_not_use\nfiscal_year: FY2025\nsource_url: <replace with SEC 10-K when available>\n---\n\n# Placeholder: Apple 10-K FY2025\n\nThis file previously contained mock data. Do not use it for research output. Use `sources/AAPL/10-k-fy2024.md` until a real FY2025 10-K excerpt is added.\n"
+};
+        let currentBriefIndex = null;
+
+        function renderGrid(data) {
+            const grid = document.getElementById('briefGrid');
+            document.getElementById('statsDisplay').textContent = `${data.length} Briefs Tracked`;
+            
+            grid.innerHTML = data.map((item) => {
+                const realIdx = briefsData.indexOf(item);
+                return `
+                <div class="card" onclick="openModal(${realIdx})">
+                    <div class="card-header">
+                        <span class="card-ticker">${item.ticker}</span>
+                        ${item.has_check ? '<span class="card-status">Source Linked</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-preview">${item.summary}</p>
+                    </div>
+                    <div class="card-footer">
+                        Open Brief
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('searchInput').value.toUpperCase();
+            const filtered = briefsData.filter(b => b.ticker.includes(q) || b.title.toUpperCase().includes(q));
+            renderGrid(filtered);
+        }
 
         function openModal(idx) {
-            const stock = currentData[idx];
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
-                <h2 style="color:var(--accent); margin-bottom:1rem; font-family:'Outfit'; font-size: 1.8rem;">${stock.ticker} - Detailed Insights</h2>
-                <div style="margin-bottom: 1.5rem;">
-                    <a href="../${stock.source_file}" target="_blank" style="color:var(--accent); text-decoration: underline;">View Full Brief (Markdown)</a>
+            currentBriefIndex = idx;
+            const brief = briefsData[idx];
+            document.getElementById('modalTicker').textContent = brief.ticker;
+            
+            const nav = document.getElementById('modalNav');
+            nav.innerHTML = brief.sections.map((sec, sIdx) => `
+                <div class="nav-item ${sIdx === 0 ? 'active' : ''}" onclick="switchSection(${sIdx})">
+                    ${sec.title}
                 </div>
-                <div style="line-height:1.6; color: var(--text-secondary); font-size: 0.95rem;">
-                    <h3 style="color:var(--accent); font-size: 1.1rem;">Company Snapshot</h3>
-                    <p style="margin-bottom: 1rem;">${stock.snapshot}</p>
-                    
-                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Fundamentals</h3>
-                    <p style="margin-bottom: 1rem;">${stock.fundamentals.replace(/\n/g, '<br>')}</p>
+            `).join('');
 
-                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Latest Earnings</h3>
-                    <ul style="margin-bottom: 1rem;">${stock.latest_earnings.map(e => `<li>${e}</li>`).join('')}</ul>
-                    
-                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Outlook</h3>
-                    <p><strong>Bull:</strong> ${stock.bull_case}</p>
-                    <p style="margin-bottom: 1rem;"><strong>Bear:</strong> ${stock.bear_case}</p>
-
-                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Kill Conditions</h3>
-                    <p>${stock.kill_conditions.replace(/\n/g, '<br>')}</p>
-                </div>
-                <button onclick="closeModal()" style="margin-top:2rem; padding:0.5rem 1rem; cursor:pointer; background:var(--accent); border:none; border-radius:5px; color:var(--bg-primary); font-weight:bold;">Close</button>
-            `;
+            switchSection(0);
             document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function switchSection(sIdx) {
+            const brief = briefsData[currentBriefIndex];
+            const section = brief.sections[sIdx];
+            
+            // Update UI
+            document.querySelectorAll('.nav-item').forEach((el, i) => {
+                el.classList.toggle('active', i === sIdx);
+            });
+
+            document.getElementById('modalContent').innerHTML = `
+                <h2 class="section-header">${section.title}</h2>
+                <div class="section-html">${section.html}</div>
+            `;
+        }
+
+        function viewSource(path) {
+            const content = sourcesData[path] || "Source file not found in cache.";
+            document.getElementById('viewerPath').textContent = path;
+            document.getElementById('viewerContent').textContent = content;
+            document.getElementById('sourceViewer').classList.add('active');
+        }
+
+        function closeSource() {
+            document.getElementById('sourceViewer').classList.remove('active');
         }
 
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
         }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('sourceViewer').classList.contains('active')) closeSource();
+                else closeModal();
+            }
+        });
+
+        renderGrid(briefsData);
     </script>
 </body>
 </html>
