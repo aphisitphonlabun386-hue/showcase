@@ -57,13 +57,12 @@
                 currentData = data;
                 const canvas = document.getElementById('canvas');
                 data.forEach((stock, idx) => {
-                    if (!stock.snapshot) return;
                     const node = document.createElement('div');
                     node.className = 'story-node';
                     node.onclick = () => openModal(idx);
                     node.innerHTML = `
                         <div class="ticker">${stock.ticker}</div>
-                        <p class="snapshot-text">${stock.snapshot.substring(0, 120)}...</p>
+                        <p class="snapshot-text">${stock.snapshot ? stock.snapshot.substring(0, 120) + '...' : 'No snapshot available.'}</p>
                         <div class="bar-container"><div class="bar" style="width: ${Math.random() * 50 + 50}%"></div></div>
                         <div class="data-point"><span>Market Sentiment</span><span>Bullish</span></div>
                     `;
