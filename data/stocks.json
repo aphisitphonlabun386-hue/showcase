@@ -1,6 +1,7 @@
 [
   {
     "ticker": "O",
+    "source_file": "briefs/O.md",
     "snapshot": "Realty Income (O) หรือที่รู้จักกันในนาม \"The Monthly Dividend Company®\" เป็นกองทรัสต์เพื่อการลงทุนในอสังหาริมทรัพย์ (REIT) ในดัชนี S&P 500 ที่เน้นอสังหาริมทรัพย์เชิงพาณิชย์แบบผู้เช่ารายเดียว (Single-tenant) ภายใต้สัญญาเช่าแบบ Triple-net (ผู้เช่ารับผิดชอบภาษี ประกัน และค่าบำรุงรักษา) บริษัทมีพอร์ตทรัพย์สินกว่า 15,450 แห่ง กระจายอยู่ใน 50 รัฐของสหรัฐฯ และ 10 ประเทศในยุโรป โดยมีจุดเด่นคือการจ่ายเงินปันผลทุกเดือนและเพิ่มปันผลต่อเนื่องมาอย่างยาวนานกว่า 30 ปี",
     "fundamentals": "- **Portfolio Stability:** อัตราการเช่า (Occupancy) สูงถึง 98.7% โดยกว่า 32.4% ของรายได้มาจากผู้เช่าระดับ Investment-grade (เช่น 7-Eleven, Walgreens, Dollar General)\n- **Growth Engine:** หลังการควบรวมกิจการ Spirit Realty มูลค่า $9.3B ในปี 2024 ทำให้บริษัทมีขนาดที่ใหญ่ขึ้นและกระจายความเสี่ยงได้ดีขึ้นมาก รวมถึงการขยายตัวในยุโรปที่มีอัตราผลตอบแทนสูงกว่า\n- **Balance Sheet:** แข็งแกร่งด้วย Credit Rating ระดับ A3/A- โดยมีอัตราส่วน Net Debt-to-EBITDA ที่ 5.4x และ Fixed Charge Coverage ที่ 4.7x\n- **Dividend Reliability:** จ่ายปันผลต่อเนื่อง 652 เดือน และเป็นหนึ่งใน Dividend Aristocrats (source: sources/O/10-k-summary.md)",
     "latest_earnings": [],
@@ -10,6 +11,7 @@
   },
   {
     "ticker": "MSFT",
+    "source_file": "briefs/MSFT.md",
     "snapshot": "Microsoft (MSFT) เป็นผู้ให้บริการเทคโนโลยีระดับโลกที่ครอบคลุมทั้งซอฟต์แวร์ ฮาร์ดแวร์ และบริการคลาวด์ ปัจจุบันบริษัทได้ทรานส์ฟอร์มตัวเองสู่การเป็น \"AI-first company\" โดยมีรายได้หลักจาก 3 กลุ่ม ได้แก่ **Intelligent Cloud** (Azure), **Productivity and Business Processes** (Office 365, LinkedIn) และ **More Personal Computing** (Windows, Gaming, Search) ด้วยการผนวกโมเดล AI ของ OpenAI เข้ากับทุกผลิตภัณฑ์ ทำให้ Microsoft มีความได้เปรียบเชิงนิเวศน์ (Ecosystem) ที่แข็งแกร่งที่สุดรายหนึ่งในโลก",
     "fundamentals": "- **Revenue trend:** เติบโตอย่างแข็งแกร่ง (FY2025 รายได้ $281.7B, +15% YoY) ขับเคลื่อนโดย Azure ที่เติบโตกว่า 34% และการรับรู้รายได้จาก Activision Blizzard\n- **Margin trend:** Gross Margin ยังอยู่ในระดับสูง (ประมาณ 69% สำหรับกลุ่ม Cloud) แต่เริ่มเผชิญความกดดันจากค่าใช้จ่ายด้านโครงสร้างพื้นฐาน AI (CapEx) ที่พุ่งสูงขึ้น\n- **Balance sheet feel:** แข็งแกร่งอย่างยิ่ง มีกระแสเงินสดอิสระมหาศาล และมีแผนซื้อหุ้นคืนมูลค่า $60B (อนุมัติ ก.ย. 2024)\n- **Capital allocation pattern:** เน้นการลงทุนหนักใน AI Data Centers ควบคู่ไปกับการคืนเงินปันผลและซื้อหุ้นคืน (source: sources/MSFT/10-k-summary.md)",
     "latest_earnings": [],
@@ -19,6 +21,7 @@
   },
   {
     "ticker": "ONDS",
+    "source_file": "briefs/ONDS.md",
     "snapshot": "",
     "fundamentals": "",
     "latest_earnings": [],
@@ -28,6 +31,7 @@
   },
   {
     "ticker": "TSM",
+    "source_file": "briefs/TSM.md",
     "snapshot": "",
     "fundamentals": "",
     "latest_earnings": [],
@@ -37,6 +41,7 @@
   },
   {
     "ticker": "RKLB",
+    "source_file": "briefs/RKLB.md",
     "snapshot": "Rocket Lab เป็นผู้เล่นเบอร์ 2 ในอุตสาหกรรมอวกาศโลก (รองจาก SpaceX) ที่ประสบความสำเร็จอย่างสูงในการปล่อยจรวดขนาดเล็ก (Electron) บริษัทได้ขยายธุรกิจจากเพียงแค่การเป็น \"บริษัทจรวด\" ไปสู่ \"End-to-end Space Company\" ที่ออกแบบและผลิตดาวเทียม รวมถึงชิ้นส่วนอวกาศครบวงจร (Space Systems) และกำลังพัฒนาจรวดขนาดใหญ่ที่นำกลับมาใช้ใหม่ได้ (Neutron) เพื่อท้าทายตลาดวงโคจรขนาดกลาง",
     "fundamentals": "- ไม่พบ Source ข้อมูลดิบ (ไม่พบไฟล์ใน sources/RKLB/)\n- *ข้อมูลจาก Yi (ก.พ. 2025):* รายได้ Q4/2024 เติบโต 120% YoY แตะ 132.4 ล้านดอลลาร์ โดยมีรายได้หลักมาจากธุรกิจ Space Systems\n- **Backlog Strength:** มีคำสั่งซื้อค้างส่ง (Backlog) สูงถึง 1,050 ล้านดอลลาร์ สะท้อนถึงความเชื่อมั่นของลูกค้าทั้งภาครัฐและเอกชน",
     "latest_earnings": [
@@ -50,6 +55,7 @@
   },
   {
     "ticker": "EOSE",
+    "source_file": "briefs/EOSE.md",
     "snapshot": "Eos Energy Enterprises (EOSE) เป็นผู้ผลิตระบบกักเก็บพลังงานด้วยแบตเตอรี่ (BESS) ขนาดใหญ่สำหรับโรงไฟฟ้าและโครงข่ายไฟฟ้า โดยใช้เทคโนโลยีซิงค์ (Zinc-based) ที่เป็นกรรมสิทธิ์ของตนเอง จุดเด่นคือความปลอดภัยสูง ไม่ติดไฟ และใช้วัสดุที่หาได้ง่ายในท้องถิ่น (สหรัฐฯ) มุ่งเป้าไปที่การกักเก็บพลังงานระยะยาว (Long-duration energy storage) เพื่อรองรับการเปลี่ยนผ่านไปสู่พลังงานหมุนเวียน",
     "fundamentals": "- **Revenue trend:** มีแนวโน้มเติบโตแบบก้าวกระโดดตามการขยายกำลังการผลิตและคำสั่งซื้อที่เพิ่มขึ้น (Backlog)\n- **Margin trend:** ปัจจุบัน Gross Margin ยังคงติดลบ แต่บริษัทมีเป้าหมายที่จะทำให้เป็นบวกได้ภายในปี 2026 ผ่านการปรับปรุงกระบวนการผลิต (Project Spruce) และการประหยัดต่อขนาด (Scale)\n- **Balance sheet feel:** มีความเสี่ยงด้านสภาพคล่องสูงเนื่องจากยังขาดทุนจากการดำเนินงาน แต่มีการระดมทุนและจัดตั้ง JV เพื่อช่วยสนับสนุนด้านการเงิน\n- **Capital allocation pattern:** เน้นการลงทุนในสินทรัพย์ถาวร (CAPEX) เพื่อขยายโรงงานและการวิจัยพัฒนาเทคโนโลยี Zinc รุ่นใหม่ (Z3)",
     "latest_earnings": [
@@ -61,6 +67,7 @@
   },
   {
     "ticker": "QQQI",
+    "source_file": "briefs/QQQI.md",
     "snapshot": "NEOS NASDAQ-100 High Income ETF (QQQI) ไม่ใช่บริษัทประกอบธุรกิจทั่วไป แต่เป็นกองทุนรวมดัชนี (ETF) ที่ออกแบบมาเพื่อสร้างกระแสเงินสดรายเดือนในระดับสูง (Income generation) ควบคู่ไปกับการเติบโตของทุนผ่านดัชนี Nasdaq-100 โดยกองทุนถือหุ้นจริงที่เป็นองค์ประกอบของ Nasdaq-100 (เช่น Apple, Microsoft, Nvidia) และใช้กลยุทธ์ Option Overlay (การขายสิทธิซื้อ) บนดัชนี NDX เพื่อเก็บค่าธรรมเนียม (Premiums) มาจ่ายเป็นเงินปันผลให้กับผู้ถือหน่วยลงทุน",
     "fundamentals": "- **Revenue trend:** รายได้ของกองทุนมาจากสองส่วนหลักคือ เงินปันผลจากหุ้นที่ถืออยู่ และค่าธรรมเนียมจากการขาย Option (Premiums) ซึ่งจะแปรผันตามความผันผวนของตลาด (Volatility)\n- **Margin trend:** กองทุนเน้นประสิทธิภาพด้านภาษีผ่าน Section 1256 Contracts และการบริหารจัดการแบบ Bull Call Spread เพื่อให้กองทุนยังสามารถเติบโตไปตามตลาดได้บ้างในช่วงขาขึ้น (Upside participation) แทนที่จะถูกจำกัดกำไรเหมือนกองทุน Covered Call แบบดั้งเดิม\n- **Balance sheet feel:** แข็งแกร่งเนื่องจากถือครองหุ้น Blue-chip ขนาดใหญ่ใน Nasdaq-100 เป็นหลัก โดยมีนโยบายลงทุนในหุ้นกลุ่มนี้อย่างน้อย 80% ของสินทรัพย์\n- **Capital allocation pattern:** เน้นการจ่ายเงินปันผลรายเดือนในระดับสูง (Targeted Yield ~14% ต่อปี) โดยมีการบริหารจัดการภาษีแบบ Return of Capital (ROC) เพื่อประโยชน์ของผู้ลงทุนระยะยาว",
     "latest_earnings": [
@@ -73,6 +80,7 @@
   },
   {
     "ticker": "AAPL",
+    "source_file": "briefs/AAPL.md",
     "snapshot": "Apple (AAPL) เป็นผู้ให้บริการโซลูชันแบบครบวงจรที่รวมฮาร์ดแวร์ (iPhone, Mac, iPad, Wearables), ระบบปฏิบัติการ (iOS, macOS), และบริการ (Services) เข้าด้วยกันอย่างเหนียวแน่น รายได้หลักยังคงมาจาก iPhone (51.4% ของรายได้ปี 2024) แต่กลุ่ม Services (24.6%) เป็นตัวขับเคลื่อนการเติบโตหลักและความได้เปรียบในเชิง **Switching Costs** ที่สูงมากจากการผูกโยงข้อมูลและประสบการณ์ของผู้ใช้ไว้ใน Ecosystem เดียวกัน (source: sources/AAPL/10-k-fy2024.md)",
     "fundamentals": "- **Revenue trend:** รายได้รวมในปี 2024 เติบโตเล็กน้อย 2% โดยที่กลุ่ม Services เติบโตโดดเด่นถึง 13% ชดเชยรายได้จาก iPhone ที่ค่อนข้างคงที่ และกลุ่ม iPad/Wearables ที่มียอดขายลดลง (source: sources/AAPL/10-k-fy2024.md)\n- **Margin trend:** Gross Margin มีทิศทางดีขึ้นทั้งในฝั่ง Products (จากการประหยัดต้นทุน) และฝั่ง Services (จากการเติบโตของรายได้และการเปลี่ยนแปลงของส่วนผสมรายได้) (source: sources/AAPL/10-k-fy2024.md)\n- **Balance sheet feel:** แข็งแกร่งอย่างยิ่ง ล่าสุดในไตรมาส 2 ปี 2026 มีการอนุมัติวงเงินซื้อหุ้นคืนเพิ่มอีก 100 พันล้านดอลลาร์ และเพิ่มเงินปันผล 4% (source: sources/AAPL/transcript.md)\n- **Capital allocation pattern:** เน้นการคืนกระแสเงินสดให้ผู้ถือหุ้นผ่านการซื้อหุ้นคืนและปันผลอย่างสม่ำเสมอ โดยมุ่งเน้นการลงทุนในนวัตกรรมและเทคโนโลยีใหม่ๆ เช่น AI เพื่อรักษาตำแหน่งทางการแข่งขัน (source: sources/AAPL/10-k-fy2024.md)",
     "latest_earnings": [
@@ -88,6 +96,7 @@
   },
   {
     "ticker": "PLTR",
+    "source_file": "briefs/PLTR.md",
     "snapshot": "",
     "fundamentals": "",
     "latest_earnings": [],
@@ -97,6 +106,7 @@
   },
   {
     "ticker": "ACME_CORP",
+    "source_file": "briefs/ACME_CORP.md",
     "snapshot": "",
     "fundamentals": "",
     "latest_earnings": [],

@@ -76,6 +76,9 @@
             const content = document.getElementById('modalContent');
             content.innerHTML = `
                 <h2 style="color:var(--accent); margin-bottom:1rem; font-family:'Outfit'; font-size: 1.8rem;">${stock.ticker} - Detailed Insights</h2>
+                <div style="margin-bottom: 1.5rem;">
+                    <a href="../${stock.source_file}" target="_blank" style="color:var(--accent); text-decoration: underline;">View Full Brief (Markdown)</a>
+                </div>
                 <div style="line-height:1.6; color: var(--text-secondary); font-size: 0.95rem;">
                     <h3 style="color:var(--accent); font-size: 1.1rem;">Company Snapshot</h3>
                     <p style="margin-bottom: 1rem;">${stock.snapshot}</p>
