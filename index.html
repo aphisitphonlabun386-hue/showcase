@@ -3,253 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Brief Showcase - ClaudyOS</title>
+    <title>Stock Brief Infographics - ClaudyOS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0b0f19;
-            --bg-secondary: #161b26;
-            --bg-tertiary: #1f2636;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --border: #2e3748;
-            --success: #10b981;
-            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            --font-display: 'Outfit', 'Inter', sans-serif;
-            --font-body: 'Inter', sans-serif;
+            --ink: #172033;
+            --muted: #667085;
+            --line: #d9e2ec;
+            --paper: #f6f8fb;
+            --panel: #ffffff;
+            --navy: #253858;
+            --teal: #09867e;
+            --green: #2f9e44;
+            --amber: #d17a00;
+            --rose: #c44569;
+            --violet: #6f42c1;
+            --cyan: #0b7285;
+            --shadow: 0 14px 34px rgba(25, 42, 70, 0.12);
+            --font: 'Inter', 'Noto Sans Thai', sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
+            background:
+                linear-gradient(135deg, rgba(9, 134, 126, 0.08), transparent 32%),
+                linear-gradient(315deg, rgba(196, 69, 105, 0.08), transparent 28%),
+                var(--paper);
+            color: var(--ink);
+            font-family: var(--font);
+            line-height: 1.55;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .shell { max-width: 1240px; margin: 0 auto; padding: 32px 20px 56px; }
 
         header {
-            padding: 80px 0 40px;
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-        }
-
-        h1 {
-            font-family: var(--font-display);
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
-        }
-
-        .subtitle { color: var(--text-secondary); font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
-
-        .controls {
-            margin: 40px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-bar {
-            position: relative;
-            flex: 1;
-            max-width: 500px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 16px 20px 16px 50px;
-            border-radius: 14px;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
-
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .stats { color: var(--text-secondary); background: var(--bg-secondary); padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); }
-
-        .brief-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
+            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+            gap: 24px;
+            align-items: stretch;
+            margin-bottom: 22px;
         }
 
+        .hero-copy, .summary-panel, .controls, .card, .modal, #sourceViewer {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(37, 56, 88, 0.12);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-copy { padding: 28px; border-radius: 18px; }
+        .eyebrow { color: var(--teal); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 10px; }
+        h1 { font-size: clamp(2rem, 5vw, 4.8rem); line-height: 0.98; letter-spacing: 0; color: var(--navy); margin-bottom: 16px; }
+        .subtitle { color: var(--muted); max-width: 760px; font-size: 1.05rem; }
+
+        .summary-panel { border-radius: 18px; padding: 22px; display: grid; gap: 14px; }
+        .metric-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        .metric { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #fbfcfe; }
+        .metric b { display: block; font-size: 1.85rem; line-height: 1; color: var(--navy); }
+        .metric span { color: var(--muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+        .coverage-map { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; min-height: 44px; align-items: end; }
+        .coverage-bar { border-radius: 6px 6px 3px 3px; min-height: 12px; background: var(--teal); opacity: 0.92; }
+
+        .controls { border-radius: 16px; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 22px; }
+        .search-wrap { flex: 1; position: relative; }
+        .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+        input {
+            width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px 13px 44px;
+            font: inherit; color: var(--ink); background: #fbfcfe; outline: none;
+        }
+        input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 134, 126, 0.12); }
+        .view-label { color: var(--muted); font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
+
+        .infographic-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
         .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            grid-column: span 4;
+            border-radius: 16px;
+            padding: 18px;
+            min-height: 360px;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
         }
+        .card:nth-child(5n + 1) { --tone: var(--teal); }
+        .card:nth-child(5n + 2) { --tone: var(--violet); }
+        .card:nth-child(5n + 3) { --tone: var(--amber); }
+        .card:nth-child(5n + 4) { --tone: var(--rose); }
+        .card:nth-child(5n + 5) { --tone: var(--cyan); }
+        .card::before { content: ''; position: absolute; inset: 0 0 auto; height: 7px; background: var(--tone); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 18px 42px rgba(25, 42, 70, 0.16); }
 
-        .card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        .card-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 16px; padding-top: 8px; }
+        .ticker { font-size: 2.5rem; font-weight: 800; color: var(--navy); letter-spacing: 0; line-height: 1; }
+        .badge { color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, white); border: 1px solid color-mix(in srgb, var(--tone) 28%, white); border-radius: 999px; padding: 6px 9px; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
 
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .card-ticker { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff; }
-        .card-status { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); color: var(--success); text-transform: uppercase; letter-spacing: 0.05em; }
+        .donut-wrap { display: grid; grid-template-columns: 106px minmax(0, 1fr); gap: 16px; align-items: center; margin-bottom: 16px; }
+        .donut { width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--tone) var(--coverage), #e9eef5 0); }
+        .donut::after { content: attr(data-score); width: 70px; height: 70px; display: grid; place-items: center; border-radius: 50%; background: white; color: var(--navy); font-size: 1.35rem; font-weight: 800; }
+        .summary { color: var(--muted); font-size: 0.93rem; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .card-preview { color: var(--text-secondary); margin-bottom: 24px; font-weight: 300; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .signals { display: grid; gap: 10px; margin: 8px 0 16px; }
+        .signal { display: grid; gap: 5px; }
+        .signal-head { display: flex; justify-content: space-between; color: var(--ink); font-weight: 800; font-size: 0.82rem; }
+        .track { height: 9px; background: #e9eef5; border-radius: 999px; overflow: hidden; }
+        .fill { height: 100%; width: var(--w); background: var(--tone); border-radius: inherit; }
 
-        .card-footer { margin-top: auto; display: flex; align-items: center; color: var(--accent); font-weight: 600; gap: 8px; transition: all 0.2s; }
-        .card:hover .card-footer { gap: 14px; }
+        .source-strip { margin-top: auto; display: flex; flex-wrap: wrap; gap: 7px; }
+        .chip { background: #f1f5f9; color: #475467; border: 1px solid var(--line); border-radius: 999px; padding: 6px 9px; font-size: 0.76rem; font-weight: 700; }
+        .open { margin-top: 15px; color: var(--tone); font-weight: 800; display: flex; align-items: center; gap: 8px; }
 
-        /* Modal System */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 8, 15, 0.9);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
+        .modal-overlay { position: fixed; inset: 0; background: rgba(23, 32, 51, 0.62); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; padding: 18px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal { width: min(1040px, 100%); height: min(90vh, 900px); border-radius: 18px; display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .modal-title { display: flex; align-items: baseline; gap: 12px; }
+        .modal-ticker { font-size: 2rem; color: var(--navy); font-weight: 800; }
+        .modal-close { border: 1px solid var(--line); background: white; color: var(--muted); border-radius: 10px; padding: 8px; cursor: pointer; }
+        .modal-body { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 0; flex: 1; }
+        .modal-nav { border-right: 1px solid var(--line); background: #f8fafc; padding: 16px; overflow-y: auto; }
+        .nav-item { border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; color: var(--muted); font-weight: 700; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { background: var(--navy); color: white; }
+        .modal-content { padding: 24px; overflow-y: auto; }
+        .section-header { color: var(--navy); font-size: 1.45rem; margin-bottom: 16px; }
+        .section-html p { color: #344054; margin-bottom: 13px; }
+        .brief-list { list-style: none; display: grid; gap: 10px; }
+        .brief-list li { color: #344054; padding-left: 20px; position: relative; }
+        .brief-list li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); position: absolute; left: 0; top: 0.7em; }
+        strong { color: var(--ink); }
+        .source-tag { display: inline-block; margin-left: 6px; color: var(--teal); background: rgba(9, 134, 126, 0.08); border: 1px solid rgba(9, 134, 126, 0.18); border-radius: 6px; padding: 2px 7px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; }
+        .source-tag.clickable { cursor: pointer; }
 
-        .modal {
-            background: var(--bg-secondary);
-            width: 95%;
-            max-width: 1000px;
-            height: 90vh;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transform: scale(0.95);
-            transition: transform 0.3s;
-        }
-
-        .modal-overlay.active .modal { transform: scale(1); }
-
-        .modal-header { padding: 30px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-title { display: flex; align-items: center; gap: 20px; }
-        .modal-ticker { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: #fff; }
-        .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.2s; }
-        .modal-close:hover { background: rgba(255,255,255,0.05); color: #fff; }
-
-        .modal-body { padding: 0; display: flex; flex: 1; overflow: hidden; }
-
-        /* Left Sidebar in Modal */
-        .modal-nav { width: 250px; border-right: 1px solid var(--border); padding: 30px 20px; background: rgba(255,255,255,0.01); }
-        .nav-item { padding: 12px 16px; border-radius: 10px; color: var(--text-secondary); cursor: pointer; margin-bottom: 8px; font-weight: 500; transition: 0.2s; }
-        .nav-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
-        .nav-item.active { background: var(--accent); color: #fff; }
-
-        /* Right Content in Modal */
-        .modal-content { flex: 1; padding: 40px; overflow-y: auto; scrollbar-width: thin; }
-
-        .section-header { font-family: var(--font-display); color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-        .section-header::before { content: ''; width: 4px; height: 24px; background: var(--accent); border-radius: 2px; }
-
-        .brief-list { list-style: none; margin-bottom: 24px; }
-        .brief-list li { position: relative; padding-left: 28px; margin-bottom: 16px; color: var(--text-secondary); }
-        .brief-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
-
-        .source-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-family: monospace;
-            color: var(--text-muted);
-            margin-left: 8px;
-        }
-
-        .source-tag.clickable { cursor: pointer; color: var(--accent); border-color: rgba(99,102,241,0.3); }
-        .source-tag.clickable:hover { background: rgba(99,102,241,0.1); }
-
-        /* Source Viewer Modal */
-        #sourceViewer {
-            position: fixed;
-            top: 50px; right: 50px; bottom: 50px; left: 50px;
-            background: #05070a;
-            z-index: 2000;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            display: none;
-            flex-direction: column;
-        }
+        #sourceViewer { position: fixed; inset: 42px; z-index: 2000; border-radius: 18px; display: none; flex-direction: column; overflow: hidden; }
         #sourceViewer.active { display: flex; }
-        .viewer-header { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .viewer-body { flex: 1; padding: 30px; overflow: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; white-space: pre-wrap; color: #a5b4fc; }
+        .viewer-header { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+        .viewer-body { flex: 1; padding: 22px; overflow: auto; background: #101828; color: #d1fadf; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88rem; }
 
-        p { margin-bottom: 16px; color: var(--text-secondary); font-weight: 300; }
-        strong { color: #fff; font-weight: 600; }
-
-        @media (max-width: 768px) {
-            .modal-body { flex-direction: column; }
-            .modal-nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; padding: 15px; }
-            .nav-item { margin-bottom: 0; margin-right: 10px; white-space: nowrap; }
+        @media (max-width: 980px) {
+            header { grid-template-columns: 1fr; }
+            .card { grid-column: span 6; }
+        }
+        @media (max-width: 700px) {
+            .shell { padding: 18px 12px 36px; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .card { grid-column: span 12; min-height: auto; }
+            .donut-wrap { grid-template-columns: 86px 1fr; }
+            .donut { width: 86px; height: 86px; }
+            .donut::after { width: 58px; height: 58px; font-size: 1.05rem; }
+            .metric-row { grid-template-columns: 1fr; }
+            .modal-body { grid-template-columns: 1fr; }
+            .modal-nav { border-right: 0; border-bottom: 1px solid var(--line); display: flex; overflow-x: auto; }
+            .nav-item { white-space: nowrap; margin: 0 7px 0 0; }
+            #sourceViewer { inset: 12px; }
         }
     </style>
 </head>
 <body>
+    <div class="shell">
+        <header>
+            <section class="hero-copy">
+                <div class="eyebrow">ClaudyOS Market Map</div>
+                <h1>Stock Brief Infographics</h1>
+                <p class="subtitle">Research briefs rendered as a visual map: coverage, source depth, thesis balance, and key sections stay scannable before opening the full write-up.</p>
+            </section>
+            <aside class="summary-panel">
+                <div class="metric-row">
+                    <div class="metric"><b id="totalBriefs">0</b><span>Briefs</span></div>
+                    <div class="metric"><b id="totalSources">0</b><span>Sources</span></div>
+                    <div class="metric"><b id="avgCoverage">0%</b><span>Avg Coverage</span></div>
+                </div>
+                <div class="coverage-map" id="coverageMap"></div>
+            </aside>
+        </header>
 
-    <header>
-        <div class="container">
-            <h1>Stock Briefs</h1>
-            <p class="subtitle">Source-grounded research briefs generated with the LTD AI 101 sub-agent workflow</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="controls">
-            <div class="search-bar">
-                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="searchInput" placeholder="Search by ticker or brief title..." oninput="handleSearch()">
+        <main>
+            <div class="controls">
+                <div class="search-wrap">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="searchInput" placeholder="Search by ticker or brief title..." oninput="handleSearch()">
+                </div>
+                <div class="view-label" id="statsDisplay">Loading infographic...</div>
             </div>
-            <div class="stats" id="statsDisplay">Loading briefs...</div>
-        </div>
-
-        <div class="brief-grid" id="briefGrid"></div>
-    </main>
+            <div class="infographic-grid" id="briefGrid"></div>
+        </main>
+    </div>
 
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
         <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-title">
                     <span class="modal-ticker" id="modalTicker">AAPL</span>
-                    <span class="card-status">Research Brief</span>
+                    <span class="badge">Research Brief</span>
                 </div>
                 <button class="modal-close" onclick="closeModal()">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -261,9 +211,9 @@
 
     <div id="sourceViewer">
         <div class="viewer-header">
-            <span id="viewerPath" style="font-family: monospace; color: var(--accent);"></span>
+            <span id="viewerPath" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--teal);"></span>
             <button class="modal-close" onclick="closeSource()">
-                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
         </div>
         <div class="viewer-body" id="viewerContent"></div>
@@ -662,27 +612,70 @@
 };
         let currentBriefIndex = null;
 
+        function sourceCount(item) {
+            const text = item.sections.map(sec => sec.html).join(' ');
+            const matches = text.match(/source-tag/g);
+            return matches ? matches.length : 0;
+        }
+
+        function coverageScore(item) {
+            const sectionScore = Math.min(item.sections.length, 6) / 6;
+            const sourceScore = Math.min(sourceCount(item), 6) / 6;
+            const summaryScore = item.summary && !item.summary.includes('No snapshot') ? 1 : 0;
+            return Math.round(((sectionScore * 0.48) + (sourceScore * 0.40) + (summaryScore * 0.12)) * 100);
+        }
+
+        function sectionValue(item, titleFragment) {
+            const section = item.sections.find(sec => sec.title.toLowerCase().includes(titleFragment));
+            return section ? Math.min(100, Math.max(18, Math.round(section.html.replace(/<[^>]+>/g, '').length / 12))) : 10;
+        }
+
+        function renderSummary() {
+            const totalSources = Object.keys(sourcesData).length;
+            const scores = briefsData.map(coverageScore);
+            const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            document.getElementById('totalBriefs').textContent = briefsData.length;
+            document.getElementById('totalSources').textContent = totalSources;
+            document.getElementById('avgCoverage').textContent = `${avg}%`;
+            document.getElementById('coverageMap').innerHTML = briefsData.map((item) => {
+                const score = coverageScore(item);
+                return `<div class="coverage-bar" title="${item.ticker}: ${score}%" style="height:${Math.max(16, score)}%; background:${score > 70 ? 'var(--teal)' : score > 40 ? 'var(--amber)' : 'var(--rose)'}"></div>`;
+            }).join('');
+        }
+
         function renderGrid(data) {
             const grid = document.getElementById('briefGrid');
-            document.getElementById('statsDisplay').textContent = `${data.length} Briefs Tracked`;
-            
+            document.getElementById('statsDisplay').textContent = `${data.length} infographic cards`;
             grid.innerHTML = data.map((item) => {
                 const realIdx = briefsData.indexOf(item);
+                const score = coverageScore(item);
+                const srcCount = sourceCount(item);
+                const fundamentals = sectionValue(item, 'fundamentals');
+                const earnings = sectionValue(item, 'earnings');
+                const risk = sectionValue(item, 'kill');
+                const chips = [
+                    `${item.sections.length} sections`,
+                    `${srcCount} source refs`,
+                    item.last_updated || 'updated'
+                ];
                 return `
-                <div class="card" onclick="openModal(${realIdx})">
-                    <div class="card-header">
-                        <span class="card-ticker">${item.ticker}</span>
-                        ${item.has_check ? '<span class="card-status">Source Linked</span>' : ''}
+                <article class="card" onclick="openModal(${realIdx})">
+                    <div class="card-top">
+                        <div class="ticker">${item.ticker}</div>
+                        <div class="badge">${score >= 70 ? 'Deep Source' : score >= 40 ? 'Partial Source' : 'Needs Source'}</div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-preview">${item.summary}</p>
+                    <div class="donut-wrap">
+                        <div class="donut" style="--coverage:${score}%" data-score="${score}%"></div>
+                        <p class="summary">${item.summary}</p>
                     </div>
-                    <div class="card-footer">
-                        Open Brief
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    <div class="signals">
+                        <div class="signal"><div class="signal-head"><span>Fundamentals</span><span>${fundamentals}%</span></div><div class="track"><div class="fill" style="--w:${fundamentals}%"></div></div></div>
+                        <div class="signal"><div class="signal-head"><span>Earnings</span><span>${earnings}%</span></div><div class="track"><div class="fill" style="--w:${earnings}%"></div></div></div>
+                        <div class="signal"><div class="signal-head"><span>Risk Lens</span><span>${risk}%</span></div><div class="track"><div class="fill" style="--w:${risk}%"></div></div></div>
                     </div>
-                </div>
-            `;
+                    <div class="source-strip">${chips.map(chip => `<span class="chip">${chip}</span>`).join('')}</div>
+                    <div class="open">Open full brief <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+                </article>`;
             }).join('');
         }
 
@@ -696,57 +689,34 @@
             currentBriefIndex = idx;
             const brief = briefsData[idx];
             document.getElementById('modalTicker').textContent = brief.ticker;
-            
-            const nav = document.getElementById('modalNav');
-            nav.innerHTML = brief.sections.map((sec, sIdx) => `
-                <div class="nav-item ${sIdx === 0 ? 'active' : ''}" onclick="switchSection(${sIdx})">
-                    ${sec.title}
-                </div>
+            document.getElementById('modalNav').innerHTML = brief.sections.map((sec, sIdx) => `
+                <div class="nav-item ${sIdx === 0 ? 'active' : ''}" onclick="switchSection(${sIdx})">${sec.title}</div>
             `).join('');
-
             switchSection(0);
             document.getElementById('modalOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function switchSection(sIdx) {
-            const brief = briefsData[currentBriefIndex];
-            const section = brief.sections[sIdx];
-            
-            // Update UI
-            document.querySelectorAll('.nav-item').forEach((el, i) => {
-                el.classList.toggle('active', i === sIdx);
-            });
-
-            document.getElementById('modalContent').innerHTML = `
-                <h2 class="section-header">${section.title}</h2>
-                <div class="section-html">${section.html}</div>
-            `;
+            const section = briefsData[currentBriefIndex].sections[sIdx];
+            document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', i === sIdx));
+            document.getElementById('modalContent').innerHTML = `<h2 class="section-header">${section.title}</h2><div class="section-html">${section.html}</div>`;
         }
 
         function viewSource(path) {
-            const content = sourcesData[path] || "Source file not found in cache.";
             document.getElementById('viewerPath').textContent = path;
-            document.getElementById('viewerContent').textContent = content;
+            document.getElementById('viewerContent').textContent = sourcesData[path] || 'Source file not found in cache.';
             document.getElementById('sourceViewer').classList.add('active');
         }
-
-        function closeSource() {
-            document.getElementById('sourceViewer').classList.remove('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
+        function closeSource() { document.getElementById('sourceViewer').classList.remove('active'); }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
                 if (document.getElementById('sourceViewer').classList.contains('active')) closeSource();
                 else closeModal();
             }
         });
-
+        renderSummary();
         renderGrid(briefsData);
     </script>
 </body>
