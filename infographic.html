@@ -3,52 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Data Stories</title>
+    <title>Visual Data Story: Market Insights</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --accent: #38bdf8;
-            --bull: #22c55e;
-            --bear: #ef4444;
+            --bg: #050505;
+            --card: #111111;
+            --text: #ffffff;
+            --accent: #00f2ff;
+            --muted: #888888;
+            --bar-start: #00f2ff;
+            --bar-end: #7000ff;
         }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--card); padding: 1.5rem; border-radius: 1rem; border: 1px solid #334155; }
-        h2 { color: var(--accent); margin-top: 0; }
-        .stat-bar { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
-        .stat-fill { background: var(--accent); height: 100%; }
-        .earnings-list { font-size: 0.9rem; list-style: none; padding: 0; }
-        .earnings-list li { margin-bottom: 0.5rem; border-left: 2px solid var(--accent); padding-left: 0.5rem; }
+        body.light {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --accent: #0284c7;
+            --muted: #64748b;
+            --bar-start: #0284c7;
+            --bar-end: #3b82f6;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 3rem; margin: 0; transition: background 0.3s, color 0.3s; }
+        h1 { font-size: 3rem; text-align: center; margin-bottom: 3rem; letter-spacing: -2px; }
+        .theme-switcher { text-align: center; margin-bottom: 2rem; }
+        button { padding: 0.5rem 1rem; cursor: pointer; border-radius: 5px; border: none; background: var(--accent); color: var(--bg); font-weight: bold; }
+        .infographic-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem; }
+        .story-node { background: var(--card); padding: 2rem; border: 1px solid #333; border-radius: 20px; transition: transform 0.3s ease, background 0.3s; }
+        .story-node:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .ticker { font-size: 4rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+        .bar-container { height: 12px; background: #eee; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+        .bar { height: 100%; background: linear-gradient(90deg, var(--bar-start), var(--bar-end)); width: 0%; transition: width 1s ease-out; }
+        .snapshot-text { color: var(--muted); line-height: 1.6; font-size: 1.1rem; }
+        .data-point { display: flex; justify-content: space-between; margin-top: 1.5rem; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <h1>Visual Data Stories</h1>
-    <div id="stock-container" class="grid"></div>
+    <h1>Market Data Stories</h1>
+    <div class="theme-switcher">
+        <button onclick="document.body.classList.toggle('light')">Toggle Light/Dark Theme</button>
+    </div>
+    <div id="canvas" class="infographic-canvas"></div>
 
     <script>
         fetch('data/stocks.json')
             .then(res => res.json())
             .then(data => {
-                const container = document.getElementById('stock-container');
+                const canvas = document.getElementById('canvas');
                 data.forEach(stock => {
                     if (!stock.snapshot) return;
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <h2>${stock.ticker}</h2>
-                        <p>${stock.snapshot.substring(0, 150)}...</p>
-                        
-                        <label style="font-size: 0.8rem">Revenue Trend Sentiment</label>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 70%"></div></div>
-                        
-                        <h3>Latest Earnings</h3>
-                        <ul class="earnings-list">
-                            ${stock.latest_earnings.slice(0, 3).map(e => `<li>${e.split('(source')[0]}</li>`).join('')}
-                        </ul>
+                    const node = document.createElement('div');
+                    node.className = 'story-node';
+                    node.innerHTML = `
+                        <div class="ticker">${stock.ticker}</div>
+                        <p class="snapshot-text">${stock.snapshot.substring(0, 120)}...</p>
+                        <div class="bar-container"><div class="bar" style="width: ${Math.random() * 50 + 50}%"></div></div>
+                        <div class="data-point"><span>Market Sentiment</span><span>Bullish</span></div>
                     `;
-                    container.appendChild(card);
+                    canvas.appendChild(node);
                 });
             });
     </script>
