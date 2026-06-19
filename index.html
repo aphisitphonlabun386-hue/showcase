@@ -75,16 +75,25 @@
             const stock = currentData[idx];
             const content = document.getElementById('modalContent');
             content.innerHTML = `
-                <h2 style="color:var(--accent); margin-bottom:1rem;">${stock.ticker} - Detailed Insights</h2>
-                <div style="line-height:1.8;">
-                    ${stock.snapshot}
-                    <h3 style="margin-top:1.5rem; color:var(--accent);">Latest Earnings</h3>
-                    <ul>${stock.latest_earnings.map(e => `<li>${e}</li>`).join('')}</ul>
-                    <h3 style="margin-top:1.5rem; color:var(--accent);">Outlook</h3>
+                <h2 style="color:var(--accent); margin-bottom:1rem; font-family:'Outfit'; font-size: 1.8rem;">${stock.ticker} - Detailed Insights</h2>
+                <div style="line-height:1.6; color: var(--text-secondary); font-size: 0.95rem;">
+                    <h3 style="color:var(--accent); font-size: 1.1rem;">Company Snapshot</h3>
+                    <p style="margin-bottom: 1rem;">${stock.snapshot}</p>
+                    
+                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Fundamentals</h3>
+                    <p style="margin-bottom: 1rem;">${stock.fundamentals.replace(/\n/g, '<br>')}</p>
+
+                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Latest Earnings</h3>
+                    <ul style="margin-bottom: 1rem;">${stock.latest_earnings.map(e => `<li>${e}</li>`).join('')}</ul>
+                    
+                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Outlook</h3>
                     <p><strong>Bull:</strong> ${stock.bull_case}</p>
-                    <p><strong>Bear:</strong> ${stock.bear_case}</p>
+                    <p style="margin-bottom: 1rem;"><strong>Bear:</strong> ${stock.bear_case}</p>
+
+                    <h3 style="margin-top:1rem; color:var(--accent); font-size: 1.1rem;">Kill Conditions</h3>
+                    <p>${stock.kill_conditions.replace(/\n/g, '<br>')}</p>
                 </div>
-                <button onclick="closeModal()" style="margin-top:2rem; padding:0.5rem 1rem; cursor:pointer;">Close</button>
+                <button onclick="closeModal()" style="margin-top:2rem; padding:0.5rem 1rem; cursor:pointer; background:var(--accent); border:none; border-radius:5px; color:var(--bg-primary); font-weight:bold;">Close</button>
             `;
             document.getElementById('modalOverlay').classList.add('active');
         }
