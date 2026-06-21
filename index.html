@@ -82,7 +82,7 @@
             margin-bottom: 22px;
         }
 
-        .hero-copy, .summary-panel, .controls, .card, .agent-card, .compare-panel, .modal, #sourceViewer {
+        .hero-copy, .summary-panel, .controls, .card, .agent-card, .compare-panel, .chart-panel, .modal, #sourceViewer {
             background: rgba(255, 255, 255, 0.94);
             border: 1px solid rgba(37, 56, 88, 0.12);
             box-shadow: var(--shadow);
@@ -104,11 +104,12 @@
         .controls { border-radius: 8px; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
         .search-wrap { flex: 1; position: relative; }
         .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-        input {
+        input, select {
             width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 13px 14px 13px 44px;
             font: inherit; color: var(--ink); background: #fbfcfe; outline: none;
         }
-        input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 134, 126, 0.12); }
+        select { padding-left: 14px; cursor: pointer; }
+        input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 134, 126, 0.12); }
         .view-label { color: var(--muted); font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
         .theme-control { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .theme-title { color: var(--muted); font-weight: 800; font-size: 0.86rem; white-space: nowrap; }
@@ -187,6 +188,48 @@
         .mini-meter span { display: block; height: 100%; background: var(--teal); width: var(--score); }
         .compare-empty { color: var(--muted); padding: 18px; text-align: center; }
 
+        .chart-section { margin: 0 0 24px; }
+        .chart-panel { border-radius: 8px; padding: 16px; }
+        .chart-controls { display: grid; grid-template-columns: minmax(130px, 170px) minmax(160px, 1fr) auto; gap: 10px; align-items: stretch; margin-bottom: 12px; }
+        .chart-input-wrap { position: relative; }
+        .chart-input-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+        .chart-button {
+            border: 1px solid var(--navy);
+            background: var(--navy);
+            color: white;
+            border-radius: 8px;
+            padding: 0 16px;
+            min-height: 48px;
+            font: inherit;
+            font-weight: 900;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .chart-button:hover { filter: brightness(1.05); }
+        .chart-symbol-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+        .chart-chip {
+            border: 1px solid var(--line);
+            background: #fbfcfe;
+            color: var(--ink);
+            border-radius: 8px;
+            padding: 7px 9px;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+        .chart-chip[aria-pressed="true"] { color: white; background: var(--teal); border-color: var(--teal); }
+        .chart-frame-wrap {
+            height: min(68vh, 620px);
+            min-height: 420px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+        .chart-frame { width: 100%; height: 100%; border: 0; display: block; }
+        .chart-note { color: var(--muted); font-size: 0.84rem; margin-top: 10px; }
+
         .infographic-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
         .card {
             grid-column: span 4;
@@ -263,6 +306,8 @@
             .controls { flex-direction: column; align-items: stretch; }
             .theme-control { align-items: stretch; }
             .theme-button { justify-content: center; flex: 1 1 calc(50% - 8px); }
+            .chart-controls { grid-template-columns: 1fr; }
+            .chart-frame-wrap { min-height: 360px; height: 560px; }
             .agent-grid { grid-template-columns: 1fr; }
             .agent-card { grid-template-columns: 76px minmax(0, 1fr); }
             .agent-avatar { width: 74px; height: 74px; }
@@ -312,6 +357,32 @@
                     <div class="compare-picker" id="comparePicker"></div>
                     <p class="compare-help" id="compareHelp">เลือกหุ้นอย่างน้อย 2 ตัวเพื่อเริ่มเปรียบเทียบ</p>
                     <div class="compare-table-wrap" id="compareTableWrap"></div>
+                </div>
+            </section>
+
+            <section class="chart-section" aria-labelledby="chartTitle">
+                <div class="section-kicker">Market Chart</div>
+                <h2 class="section-title" id="chartTitle">กราฟหุ้นอเมริกาแบบเลือกเอง</h2>
+                <p class="section-note">พิมพ์ ticker หุ้นสหรัฐฯ แล้วเลือกตลาดหลัก หรือใช้ช่องค้นหาในกราฟ TradingView เพื่อเปลี่ยน symbol ได้โดยตรง ข้อมูลตลาดขึ้นกับ feed และเงื่อนไขของ TradingView</p>
+                <div class="chart-panel">
+                    <div class="chart-controls">
+                        <select id="chartExchange" aria-label="เลือกตลาดหุ้น">
+                            <option value="NASDAQ">NASDAQ</option>
+                            <option value="NYSE">NYSE</option>
+                            <option value="AMEX">AMEX</option>
+                            <option value="ARCA">NYSE ARCA</option>
+                        </select>
+                        <div class="chart-input-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M9 19V9"/><path d="M14 19V7"/><path d="M19 19V3"/></svg>
+                            <input type="text" id="chartTickerInput" value="MSFT" placeholder="เช่น MSFT, AAPL, O, TSM, RKLB" onkeydown="handleChartKey(event)">
+                        </div>
+                        <button class="chart-button" type="button" onclick="loadChartFromInput()">แสดงกราฟ</button>
+                    </div>
+                    <div class="chart-symbol-row" id="chartQuickSymbols"></div>
+                    <div class="chart-frame-wrap">
+                        <iframe class="chart-frame" id="stockChartFrame" title="กราฟหุ้น TradingView" loading="lazy"></iframe>
+                    </div>
+                    <p class="chart-note" id="chartNote">กำลังแสดง NASDAQ:MSFT · สามารถกดค้นหา symbol ในกราฟเพื่อเลือกหุ้นอเมริกาตัวอื่นได้</p>
                 </div>
             </section>
 
@@ -1123,6 +1194,115 @@
                 </table>`;
         }
 
+        const knownUsSymbols = {
+            AAPL: 'NASDAQ',
+            MSFT: 'NASDAQ',
+            QQQI: 'NASDAQ',
+            PLTR: 'NASDAQ',
+            RKLB: 'NASDAQ',
+            ASTS: 'NASDAQ',
+            EOSE: 'NASDAQ',
+            ONDS: 'NASDAQ',
+            TSM: 'NYSE',
+            O: 'NYSE'
+        };
+        let activeChartSymbol = '';
+
+        function normalizeTicker(value) {
+            return value.trim().toUpperCase().replace(/[^A-Z0-9.:-]/g, '');
+        }
+
+        function chartTheme() {
+            return document.body.dataset.theme === 'balanced' ? 'light' : 'light';
+        }
+
+        function tradingViewUrl(symbol) {
+            const params = new URLSearchParams({
+                symbol,
+                interval: 'D',
+                hidetoptoolbar: '0',
+                symboledit: '1',
+                saveimage: '0',
+                toolbarbg: 'f8fafc',
+                studies: 'Volume@tv-basicstudies',
+                theme: chartTheme(),
+                style: '1',
+                timezone: 'America/New_York',
+                withdateranges: '1',
+                hideideas: '1',
+                locale: 'th',
+                allow_symbol_change: '1'
+            });
+            return `https://www.tradingview.com/widgetembed/?${params.toString()}`;
+        }
+
+        function setChartSymbol(symbol) {
+            activeChartSymbol = symbol;
+            localStorage.setItem('stockShowcaseChartSymbol', symbol);
+            const parts = symbol.split(':');
+            if (parts.length === 2) {
+                if (['NASDAQ', 'NYSE', 'AMEX', 'ARCA'].includes(parts[0])) {
+                    document.getElementById('chartExchange').value = parts[0];
+                }
+                document.getElementById('chartTickerInput').value = parts[1];
+            }
+            document.getElementById('stockChartFrame').src = tradingViewUrl(symbol);
+            document.getElementById('chartNote').textContent = `กำลังแสดง ${symbol} · สามารถกดค้นหา symbol ในกราฟเพื่อเลือกหุ้นอเมริกาตัวอื่นได้`;
+            document.querySelectorAll('.chart-chip').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.symbol === symbol));
+            });
+        }
+
+        function symbolFromInput() {
+            const rawTicker = normalizeTicker(document.getElementById('chartTickerInput').value);
+            if (!rawTicker) return activeChartSymbol || 'NASDAQ:MSFT';
+            if (rawTicker.includes(':')) return rawTicker;
+            const exchange = document.getElementById('chartExchange').value || knownUsSymbols[rawTicker] || 'NASDAQ';
+            return `${exchange}:${rawTicker}`;
+        }
+
+        function loadChartFromInput() {
+            const symbol = symbolFromInput();
+            const ticker = symbol.includes(':') ? symbol.split(':')[1] : symbol;
+            const exchange = symbol.includes(':') ? symbol.split(':')[0] : 'NASDAQ';
+            document.getElementById('chartTickerInput').value = ticker;
+            if (['NASDAQ', 'NYSE', 'AMEX', 'ARCA'].includes(exchange)) {
+                document.getElementById('chartExchange').value = exchange;
+            }
+            setChartSymbol(symbol);
+        }
+
+        function handleChartKey(event) {
+            if (event.key === 'Enter') loadChartFromInput();
+        }
+
+        function renderChartQuickSymbols() {
+            const symbols = [...new Set([
+                ...briefsData.map(item => `${knownUsSymbols[item.ticker] || 'NASDAQ'}:${item.ticker}`),
+                'NASDAQ:AAPL',
+                'NASDAQ:NVDA',
+                'NYSE:BRK.B',
+                'AMEX:SPY'
+            ])].slice(0, 18);
+            document.getElementById('chartQuickSymbols').innerHTML = symbols.map(symbol => {
+                const label = symbol.split(':')[1];
+                return `<button class="chart-chip" type="button" data-symbol="${symbol}" aria-pressed="${symbol === activeChartSymbol}" onclick="setChartSymbol('${symbol}')">${label}</button>`;
+            }).join('');
+        }
+
+        function initChartExplorer() {
+            const saved = localStorage.getItem('stockShowcaseChartSymbol') || 'NASDAQ:MSFT';
+            const parts = saved.split(':');
+            if (parts.length === 2) {
+                if (['NASDAQ', 'NYSE', 'AMEX', 'ARCA'].includes(parts[0])) {
+                    document.getElementById('chartExchange').value = parts[0];
+                }
+                document.getElementById('chartTickerInput').value = parts[1];
+            }
+            setChartSymbol(saved);
+            renderChartQuickSymbols();
+        }
+
         function openModal(idx) {
             currentBriefIndex = idx;
             const brief = briefsData[idx];
@@ -1157,6 +1337,7 @@
         setTheme(localStorage.getItem('stockShowcaseTheme') || 'balanced');
         renderAgents();
         renderComparePicker();
+        initChartExplorer();
         renderSummary();
         renderGrid(briefsData);
     </script>
