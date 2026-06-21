@@ -82,7 +82,7 @@
             margin-bottom: 22px;
         }
 
-        .hero-copy, .summary-panel, .controls, .card, .modal, #sourceViewer {
+        .hero-copy, .summary-panel, .controls, .card, .agent-card, .modal, #sourceViewer {
             background: rgba(255, 255, 255, 0.94);
             border: 1px solid rgba(37, 56, 88, 0.12);
             box-shadow: var(--shadow);
@@ -133,6 +133,30 @@
         .swatch-forest { background: linear-gradient(135deg, #0f766e 0 48%, #7c6f2f 52%); }
         .swatch-graphite { background: linear-gradient(135deg, #2563eb 0 48%, #dc2626 52%); }
         .swatch-orchid { background: linear-gradient(135deg, #7c3aed 0 48%, #0f766e 52%); }
+
+        .agent-section { margin: 0 0 24px; }
+        .section-kicker { color: var(--teal); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 7px; }
+        .section-title { color: var(--navy); font-size: clamp(1.45rem, 3vw, 2.2rem); line-height: 1.1; margin-bottom: 8px; }
+        .section-note { color: var(--muted); max-width: 780px; margin-bottom: 16px; }
+        .agent-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+        .agent-card {
+            border-radius: 8px;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: 86px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            min-height: 178px;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-card::before { content: ''; position: absolute; inset: 0 0 auto; height: 6px; background: var(--agent-tone); }
+        .agent-avatar { width: 84px; height: 84px; display: block; }
+        .agent-info { min-width: 0; padding-top: 5px; }
+        .agent-name { color: var(--navy); font-size: 1.05rem; font-weight: 900; line-height: 1.15; margin-bottom: 4px; }
+        .agent-role { color: var(--agent-tone); font-size: 0.78rem; font-weight: 900; margin-bottom: 7px; }
+        .agent-duty { color: #344054; font-size: 0.86rem; line-height: 1.45; }
+        .agent-lane { display: inline-flex; align-items: center; margin-top: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 4px 7px; color: var(--muted); font-size: 0.73rem; font-weight: 800; background: #fbfcfe; }
 
         .infographic-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
         .card {
@@ -202,6 +226,7 @@
 
         @media (max-width: 980px) {
             header { grid-template-columns: 1fr; }
+            .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .card { grid-column: span 6; }
         }
         @media (max-width: 700px) {
@@ -209,6 +234,9 @@
             .controls { flex-direction: column; align-items: stretch; }
             .theme-control { align-items: stretch; }
             .theme-button { justify-content: center; flex: 1 1 calc(50% - 8px); }
+            .agent-grid { grid-template-columns: 1fr; }
+            .agent-card { grid-template-columns: 76px minmax(0, 1fr); }
+            .agent-avatar { width: 74px; height: 74px; }
             .card { grid-column: span 12; min-height: auto; }
             .donut-wrap { grid-template-columns: 86px 1fr; }
             .donut { width: 86px; height: 86px; }
@@ -240,6 +268,13 @@
         </header>
 
         <main>
+            <section class="agent-section" aria-labelledby="agentTitle">
+                <div class="section-kicker">Agent Team</div>
+                <h2 class="section-title" id="agentTitle">ทีมพนักงาน AI ประจำระบบ</h2>
+                <p class="section-note">Agent แต่ละตัวมีตำแหน่งชัดเจนในสายงานวิจัย: บางคนอ่าน source ในเครื่อง บางคนตรวจข่าว บางคนจัดคลังข้อมูล และบางคนดูแลการนำเว็บขึ้นเผยแพร่</p>
+                <div class="agent-grid" id="agentGrid"></div>
+            </section>
+
             <div class="controls">
                 <div class="search-wrap">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -290,6 +325,88 @@
         const briefsData = ##DATA##;
         const sourcesData = ##SOURCES##;
         let currentBriefIndex = null;
+        const agentsData = [
+            {
+                id: 'fundamentals',
+                name: 'ฟ้า',
+                role: 'นักวิเคราะห์พื้นฐาน',
+                duty: 'อ่าน financials, annual report และ business summary เพื่อสรุปภาพธุรกิจ margin งบดุล และความเสี่ยงโครงสร้าง',
+                lane: 'Stock research',
+                tone: '#09867e',
+                shirt: '#0f766e',
+                hair: '#172033'
+            },
+            {
+                id: 'earnings',
+                name: 'เมฆ',
+                role: 'นักอ่านงบล่าสุด',
+                duty: 'อ่าน earnings summary หรือ transcript เพื่อดึง revenue, margin, guidance, commentary และ surprise ล่าสุด',
+                lane: 'Stock research',
+                tone: '#6f42c1',
+                shirt: '#6f42c1',
+                hair: '#2b213a'
+            },
+            {
+                id: 'news-sentiment',
+                name: 'นิว',
+                role: 'เรดาร์ข่าวตลาด',
+                duty: 'ค้นเว็บเพื่อดูข่าวล่าสุด catalyst analyst move และ sentiment ที่อาจกระทบมุมมองหุ้น',
+                lane: 'Stock research',
+                tone: '#d17a00',
+                shirt: '#d17a00',
+                hair: '#302114'
+            },
+            {
+                id: 'source-curator',
+                name: 'แก้ว',
+                role: 'บรรณารักษ์แหล่งข้อมูล',
+                duty: 'แปลงลิงก์และ source จาก brief ให้เป็นไฟล์ markdown ใน sources/<TICKER>/ เพื่อใช้ต่อรอบถัดไป',
+                lane: 'Source system',
+                tone: '#0b7285',
+                shirt: '#0b7285',
+                hair: '#1f2937'
+            },
+            {
+                id: 'showcase-publisher',
+                name: 'พิม',
+                role: 'ผู้จัดการหน้าเว็บ',
+                duty: 'regenerate showcase ตรวจ placeholder ดู diff และเตรียม commit/push เมื่อผู้ใช้อนุมัติ',
+                lane: 'Publishing',
+                tone: '#c44569',
+                shirt: '#c44569',
+                hair: '#3b2430'
+            },
+            {
+                id: 'auditor',
+                name: 'บัญชา',
+                role: 'ผู้ตรวจสุขภาพการเงิน',
+                duty: 'อ่านไฟล์การเงินคู่ค้าเพื่อดู liquidity, solvency, cash runway และสัญญาณเตือนทางการเงิน',
+                lane: 'Partner risk',
+                tone: '#2f9e44',
+                shirt: '#2f9e44',
+                hair: '#1f2d1f'
+            },
+            {
+                id: 'investigator',
+                name: 'อิน',
+                role: 'ผู้ตรวจทะเบียนและกฎหมาย',
+                duty: 'อ่าน registration และ compliance records เพื่อตรวจสถานะบริษัท ผู้ถือหุ้น ใบอนุญาต และคดีสำคัญ',
+                lane: 'Partner risk',
+                tone: '#2563eb',
+                shirt: '#2563eb',
+                hair: '#182338'
+            },
+            {
+                id: 'mediator',
+                name: 'มีนา',
+                role: 'ผู้ประเมินชื่อเสียงตลาด',
+                duty: 'ใช้เว็บดูข่าว รีวิว partnership และความเสี่ยงภาพลักษณ์ของคู่ค้าในตลาดจริง',
+                lane: 'Partner risk',
+                tone: '#db2777',
+                shirt: '#db2777',
+                hair: '#3f1f2d'
+            }
+        ];
         const themeLabels = {
             balanced: 'สมดุล',
             forest: 'เขียว',
@@ -304,6 +421,37 @@
             document.querySelectorAll('.theme-button').forEach(button => {
                 button.setAttribute('aria-pressed', String(button.dataset.themeOption === nextTheme));
             });
+        }
+
+        function agentAvatar(agent, idx) {
+            const skin = ['#f2c9a8', '#d9a779', '#b97955', '#f0b98f'][idx % 4];
+            const bg = `color-mix(in srgb, ${agent.tone} 18%, white)`;
+            return `
+                <svg class="agent-avatar" viewBox="0 0 120 120" role="img" aria-label="${agent.name} ${agent.role}">
+                    <rect x="8" y="8" width="104" height="104" rx="22" fill="${bg}"/>
+                    <circle cx="60" cy="43" r="23" fill="${skin}"/>
+                    <path d="M35 42c4-22 20-29 39-19 8 4 13 12 12 24-14-10-28-13-51-5Z" fill="${agent.hair}"/>
+                    <path d="M38 82c5-17 39-17 44 0l7 24H31l7-24Z" fill="${agent.shirt}"/>
+                    <path d="M47 80h26l-13 14-13-14Z" fill="#fff" opacity="0.92"/>
+                    <circle cx="52" cy="46" r="3" fill="#172033"/>
+                    <circle cx="68" cy="46" r="3" fill="#172033"/>
+                    <path d="M52 58c5 5 12 5 17 0" fill="none" stroke="#7a4c35" stroke-width="3" stroke-linecap="round"/>
+                    <rect x="30" y="88" width="60" height="18" rx="9" fill="#fff" opacity="0.16"/>
+                </svg>`;
+        }
+
+        function renderAgents() {
+            document.getElementById('agentGrid').innerHTML = agentsData.map((agent, idx) => `
+                <article class="agent-card" style="--agent-tone:${agent.tone}">
+                    ${agentAvatar(agent, idx)}
+                    <div class="agent-info">
+                        <h3 class="agent-name">${agent.name}</h3>
+                        <div class="agent-role">${agent.role}</div>
+                        <p class="agent-duty">${agent.duty}</p>
+                        <span class="agent-lane">${agent.lane} · ${agent.id}</span>
+                    </div>
+                </article>
+            `).join('');
         }
 
         function sourceCount(item) {
@@ -411,6 +559,7 @@
             }
         });
         setTheme(localStorage.getItem('stockShowcaseTheme') || 'balanced');
+        renderAgents();
         renderSummary();
         renderGrid(briefsData);
     </script>
