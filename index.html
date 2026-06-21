@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Brief Infographics - ClaudyOS</title>
+    <title>แผนที่สรุปหุ้น - ClaudyOS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +16,8 @@
             --panel: #ffffff;
             --navy: #253858;
             --teal: #09867e;
+            --accent: #09867e;
+            --accent-2: #c44569;
             --green: #2f9e44;
             --amber: #d17a00;
             --rose: #c44569;
@@ -25,12 +27,45 @@
             --font: 'Inter', 'Noto Sans Thai', sans-serif;
         }
 
+        body[data-theme="forest"] {
+            --paper: #f4f8f5;
+            --navy: #20352c;
+            --teal: #0f766e;
+            --accent: #0f766e;
+            --accent-2: #7c6f2f;
+            --amber: #b7791f;
+            --rose: #b83280;
+            --cyan: #0e7490;
+        }
+
+        body[data-theme="graphite"] {
+            --paper: #f5f6f8;
+            --navy: #1f2937;
+            --teal: #2563eb;
+            --accent: #2563eb;
+            --accent-2: #dc2626;
+            --amber: #ca8a04;
+            --rose: #be123c;
+            --cyan: #0891b2;
+        }
+
+        body[data-theme="orchid"] {
+            --paper: #f8f6fb;
+            --navy: #35264a;
+            --teal: #7c3aed;
+            --accent: #7c3aed;
+            --accent-2: #0f766e;
+            --amber: #c27803;
+            --rose: #db2777;
+            --cyan: #0284c7;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background:
-                linear-gradient(135deg, rgba(9, 134, 126, 0.08), transparent 32%),
-                linear-gradient(315deg, rgba(196, 69, 105, 0.08), transparent 28%),
+                linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 32%),
+                linear-gradient(315deg, color-mix(in srgb, var(--accent-2) 10%, transparent), transparent 28%),
                 var(--paper);
             color: var(--ink);
             font-family: var(--font);
@@ -53,33 +88,56 @@
             box-shadow: var(--shadow);
         }
 
-        .hero-copy { padding: 28px; border-radius: 18px; }
+        .hero-copy { padding: 28px; border-radius: 8px; }
         .eyebrow { color: var(--teal); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 10px; }
         h1 { font-size: clamp(2rem, 5vw, 4.8rem); line-height: 0.98; letter-spacing: 0; color: var(--navy); margin-bottom: 16px; }
         .subtitle { color: var(--muted); max-width: 760px; font-size: 1.05rem; }
 
-        .summary-panel { border-radius: 18px; padding: 22px; display: grid; gap: 14px; }
+        .summary-panel { border-radius: 8px; padding: 22px; display: grid; gap: 14px; }
         .metric-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-        .metric { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #fbfcfe; }
+        .metric { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: #fbfcfe; }
         .metric b { display: block; font-size: 1.85rem; line-height: 1; color: var(--navy); }
         .metric span { color: var(--muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
         .coverage-map { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; min-height: 44px; align-items: end; }
         .coverage-bar { border-radius: 6px 6px 3px 3px; min-height: 12px; background: var(--teal); opacity: 0.92; }
 
-        .controls { border-radius: 16px; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 22px; }
+        .controls { border-radius: 8px; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
         .search-wrap { flex: 1; position: relative; }
         .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
         input {
-            width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px 13px 44px;
+            width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 13px 14px 13px 44px;
             font: inherit; color: var(--ink); background: #fbfcfe; outline: none;
         }
         input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 134, 126, 0.12); }
         .view-label { color: var(--muted); font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
+        .theme-control { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .theme-title { color: var(--muted); font-weight: 800; font-size: 0.86rem; white-space: nowrap; }
+        .theme-button {
+            border: 1px solid var(--line);
+            background: #fbfcfe;
+            color: var(--ink);
+            border-radius: 8px;
+            padding: 8px 10px;
+            min-height: 38px;
+            font: inherit;
+            font-size: 0.86rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .theme-button[aria-pressed="true"] { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 14%, transparent); }
+        .swatch { width: 16px; height: 16px; border-radius: 50%; display: inline-block; border: 2px solid white; box-shadow: 0 0 0 1px rgba(23, 32, 51, 0.18); }
+        .swatch-balanced { background: linear-gradient(135deg, #09867e 0 48%, #c44569 52%); }
+        .swatch-forest { background: linear-gradient(135deg, #0f766e 0 48%, #7c6f2f 52%); }
+        .swatch-graphite { background: linear-gradient(135deg, #2563eb 0 48%, #dc2626 52%); }
+        .swatch-orchid { background: linear-gradient(135deg, #7c3aed 0 48%, #0f766e 52%); }
 
         .infographic-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
         .card {
             grid-column: span 4;
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 18px;
             min-height: 360px;
             display: flex;
@@ -99,7 +157,7 @@
 
         .card-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 16px; padding-top: 8px; }
         .ticker { font-size: 2.5rem; font-weight: 800; color: var(--navy); letter-spacing: 0; line-height: 1; }
-        .badge { color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, white); border: 1px solid color-mix(in srgb, var(--tone) 28%, white); border-radius: 999px; padding: 6px 9px; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+        .badge { color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, white); border: 1px solid color-mix(in srgb, var(--tone) 28%, white); border-radius: 8px; padding: 6px 9px; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
 
         .donut-wrap { display: grid; grid-template-columns: 106px minmax(0, 1fr); gap: 16px; align-items: center; margin-bottom: 16px; }
         .donut { width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--tone) var(--coverage), #e9eef5 0); }
@@ -113,12 +171,12 @@
         .fill { height: 100%; width: var(--w); background: var(--tone); border-radius: inherit; }
 
         .source-strip { margin-top: auto; display: flex; flex-wrap: wrap; gap: 7px; }
-        .chip { background: #f1f5f9; color: #475467; border: 1px solid var(--line); border-radius: 999px; padding: 6px 9px; font-size: 0.76rem; font-weight: 700; }
+        .chip { background: #f1f5f9; color: #475467; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; font-size: 0.76rem; font-weight: 700; }
         .open { margin-top: 15px; color: var(--tone); font-weight: 800; display: flex; align-items: center; gap: 8px; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(23, 32, 51, 0.62); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; padding: 18px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal { width: min(1040px, 100%); height: min(90vh, 900px); border-radius: 18px; display: flex; flex-direction: column; overflow: hidden; }
+        .modal { width: min(1040px, 100%); height: min(90vh, 900px); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .modal-title { display: flex; align-items: baseline; gap: 12px; }
         .modal-ticker { font-size: 2rem; color: var(--navy); font-weight: 800; }
@@ -137,7 +195,7 @@
         .source-tag { display: inline-block; margin-left: 6px; color: var(--teal); background: rgba(9, 134, 126, 0.08); border: 1px solid rgba(9, 134, 126, 0.18); border-radius: 6px; padding: 2px 7px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; }
         .source-tag.clickable { cursor: pointer; }
 
-        #sourceViewer { position: fixed; inset: 42px; z-index: 2000; border-radius: 18px; display: none; flex-direction: column; overflow: hidden; }
+        #sourceViewer { position: fixed; inset: 42px; z-index: 2000; border-radius: 8px; display: none; flex-direction: column; overflow: hidden; }
         #sourceViewer.active { display: flex; }
         .viewer-header { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
         .viewer-body { flex: 1; padding: 22px; overflow: auto; background: #101828; color: #d1fadf; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88rem; }
@@ -149,6 +207,8 @@
         @media (max-width: 700px) {
             .shell { padding: 18px 12px 36px; }
             .controls { flex-direction: column; align-items: stretch; }
+            .theme-control { align-items: stretch; }
+            .theme-button { justify-content: center; flex: 1 1 calc(50% - 8px); }
             .card { grid-column: span 12; min-height: auto; }
             .donut-wrap { grid-template-columns: 86px 1fr; }
             .donut { width: 86px; height: 86px; }
@@ -165,15 +225,15 @@
     <div class="shell">
         <header>
             <section class="hero-copy">
-                <div class="eyebrow">ClaudyOS Market Map</div>
-                <h1>Stock Brief Infographics</h1>
-                <p class="subtitle">Research briefs rendered as a visual map: coverage, source depth, thesis balance, and key sections stay scannable before opening the full write-up.</p>
+                <div class="eyebrow">แผนที่ตลาด ClaudyOS</div>
+                <h1>แผนที่สรุปหุ้น</h1>
+                <p class="subtitle">ดูภาพรวมงานวิจัยหุ้นแบบอินโฟกราฟิก เห็นความครบของ source, ประเด็นพื้นฐาน, งบล่าสุด และความเสี่ยง ก่อนเปิดอ่าน brief ฉบับเต็ม</p>
             </section>
             <aside class="summary-panel">
                 <div class="metric-row">
-                    <div class="metric"><b id="totalBriefs">0</b><span>Briefs</span></div>
-                    <div class="metric"><b id="totalSources">0</b><span>Sources</span></div>
-                    <div class="metric"><b id="avgCoverage">0%</b><span>Avg Coverage</span></div>
+                    <div class="metric"><b id="totalBriefs">0</b><span>จำนวน Brief</span></div>
+                    <div class="metric"><b id="totalSources">0</b><span>ไฟล์ Source</span></div>
+                    <div class="metric"><b id="avgCoverage">0%</b><span>ความครบเฉลี่ย</span></div>
                 </div>
                 <div class="coverage-map" id="coverageMap"></div>
             </aside>
@@ -183,9 +243,16 @@
             <div class="controls">
                 <div class="search-wrap">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    <input type="text" id="searchInput" placeholder="Search by ticker or brief title..." oninput="handleSearch()">
+                    <input type="text" id="searchInput" placeholder="ค้นหาด้วย ticker หรือชื่อ brief..." oninput="handleSearch()">
                 </div>
-                <div class="view-label" id="statsDisplay">Loading infographic...</div>
+                <div class="theme-control" aria-label="เลือกโทนสี">
+                    <span class="theme-title">โทนสี</span>
+                    <button class="theme-button" type="button" data-theme-option="balanced" onclick="setTheme('balanced')"><span class="swatch swatch-balanced"></span>สมดุล</button>
+                    <button class="theme-button" type="button" data-theme-option="forest" onclick="setTheme('forest')"><span class="swatch swatch-forest"></span>เขียว</button>
+                    <button class="theme-button" type="button" data-theme-option="graphite" onclick="setTheme('graphite')"><span class="swatch swatch-graphite"></span>กราไฟต์</button>
+                    <button class="theme-button" type="button" data-theme-option="orchid" onclick="setTheme('orchid')"><span class="swatch swatch-orchid"></span>ม่วง</button>
+                </div>
+                <div class="view-label" id="statsDisplay">กำลังโหลดอินโฟกราฟิก...</div>
             </div>
             <div class="infographic-grid" id="briefGrid"></div>
         </main>
@@ -196,7 +263,7 @@
             <div class="modal-header">
                 <div class="modal-title">
                     <span class="modal-ticker" id="modalTicker">AAPL</span>
-                    <span class="badge">Research Brief</span>
+                    <span class="badge">สรุปงานวิจัย</span>
                 </div>
                 <button class="modal-close" onclick="closeModal()">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -668,6 +735,21 @@
   "sources/AAPL/placeholder-fy2025-10k-do-not-use.md": "---\nticker: AAPL\nsource_type: placeholder_do_not_use\nfiscal_year: FY2025\nsource_url: <replace with SEC 10-K when available>\n---\n\n# Placeholder: Apple 10-K FY2025\n\nThis file previously contained mock data. Do not use it for research output. Use `sources/AAPL/10-k-fy2024.md` until a real FY2025 10-K excerpt is added.\n"
 };
         let currentBriefIndex = null;
+        const themeLabels = {
+            balanced: 'สมดุล',
+            forest: 'เขียว',
+            graphite: 'กราไฟต์',
+            orchid: 'ม่วง'
+        };
+
+        function setTheme(theme) {
+            const nextTheme = themeLabels[theme] ? theme : 'balanced';
+            document.body.dataset.theme = nextTheme;
+            localStorage.setItem('stockShowcaseTheme', nextTheme);
+            document.querySelectorAll('.theme-button').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.themeOption === nextTheme));
+            });
+        }
 
         function sourceCount(item) {
             const text = item.sections.map(sec => sec.html).join(' ');
@@ -702,7 +784,7 @@
 
         function renderGrid(data) {
             const grid = document.getElementById('briefGrid');
-            document.getElementById('statsDisplay').textContent = `${data.length} infographic cards`;
+            document.getElementById('statsDisplay').textContent = `แสดง ${data.length} การ์ด`;
             grid.innerHTML = data.map((item) => {
                 const realIdx = briefsData.indexOf(item);
                 const score = coverageScore(item);
@@ -711,27 +793,27 @@
                 const earnings = sectionValue(item, 'earnings');
                 const risk = sectionValue(item, 'kill');
                 const chips = [
-                    `${item.sections.length} sections`,
-                    `${srcCount} source refs`,
-                    item.last_updated || 'updated'
+                    `${item.sections.length} หมวด`,
+                    `${srcCount} จุดอ้างอิง`,
+                    item.last_updated || 'อัปเดตแล้ว'
                 ];
                 return `
                 <article class="card" onclick="openModal(${realIdx})">
                     <div class="card-top">
                         <div class="ticker">${item.ticker}</div>
-                        <div class="badge">${score >= 70 ? 'Deep Source' : score >= 40 ? 'Partial Source' : 'Needs Source'}</div>
+                        <div class="badge">${score >= 70 ? 'Source แน่น' : score >= 40 ? 'Source บางส่วน' : 'ต้องเติม Source'}</div>
                     </div>
                     <div class="donut-wrap">
                         <div class="donut" style="--coverage:${score}%" data-score="${score}%"></div>
                         <p class="summary">${item.summary}</p>
                     </div>
                     <div class="signals">
-                        <div class="signal"><div class="signal-head"><span>Fundamentals</span><span>${fundamentals}%</span></div><div class="track"><div class="fill" style="--w:${fundamentals}%"></div></div></div>
-                        <div class="signal"><div class="signal-head"><span>Earnings</span><span>${earnings}%</span></div><div class="track"><div class="fill" style="--w:${earnings}%"></div></div></div>
-                        <div class="signal"><div class="signal-head"><span>Risk Lens</span><span>${risk}%</span></div><div class="track"><div class="fill" style="--w:${risk}%"></div></div></div>
+                        <div class="signal"><div class="signal-head"><span>พื้นฐาน</span><span>${fundamentals}%</span></div><div class="track"><div class="fill" style="--w:${fundamentals}%"></div></div></div>
+                        <div class="signal"><div class="signal-head"><span>งบล่าสุด</span><span>${earnings}%</span></div><div class="track"><div class="fill" style="--w:${earnings}%"></div></div></div>
+                        <div class="signal"><div class="signal-head"><span>ความเสี่ยง</span><span>${risk}%</span></div><div class="track"><div class="fill" style="--w:${risk}%"></div></div></div>
                     </div>
                     <div class="source-strip">${chips.map(chip => `<span class="chip">${chip}</span>`).join('')}</div>
-                    <div class="open">Open full brief <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+                    <div class="open">เปิด brief ฉบับเต็ม <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
                 </article>`;
             }).join('');
         }
@@ -762,7 +844,7 @@
 
         function viewSource(path) {
             document.getElementById('viewerPath').textContent = path;
-            document.getElementById('viewerContent').textContent = sourcesData[path] || 'Source file not found in cache.';
+            document.getElementById('viewerContent').textContent = sourcesData[path] || 'ไม่พบไฟล์ source ใน cache ของเว็บ';
             document.getElementById('sourceViewer').classList.add('active');
         }
         function closeSource() { document.getElementById('sourceViewer').classList.remove('active'); }
@@ -773,6 +855,7 @@
                 else closeModal();
             }
         });
+        setTheme(localStorage.getItem('stockShowcaseTheme') || 'balanced');
         renderSummary();
         renderGrid(briefsData);
     </script>
